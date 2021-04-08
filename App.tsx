@@ -1,5 +1,5 @@
 //@ts-nocheck
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   ActivityIndicator,
   Button,
@@ -18,23 +18,26 @@ import Clipboard from "expo-clipboard";
 
 import Environment from "./config/environment";
 import firebase from "./Utils/firebase";
+import trello from "./Utils/trello";
+import { WebView } from "react-native-webview";
 
-export default class App extends React.Component {
-  state = {
+function App() {
+  useEffect(() => {
+    // Permissions.askAsync(Permissions.CAMERA);
+    // Permissions.askAsync(Permissions.CAMERA_ROLL);
+    return () => {};
+  }, []);
+
+  const [state, setState] = useState({
     image: null,
     uploading: false,
     googleResponse: null,
-  };
+  });
 
-  async componentDidMount() {
-    await Permissions.askAsync(Permissions.CAMERA_ROLL);
-    await Permissions.askAsync(Permissions.CAMERA);
-  }
-
-  submitToGoogle = async () => {
+  const submitToGoogle = async () => {
     try {
-      this.setState({ uploading: true });
-      let { image } = this.state;
+      setState({ ...state, uploading: true });
+      let { image } = state;
       let body = JSON.stringify({
         requests: [
           {
@@ -61,81 +64,55 @@ export default class App extends React.Component {
       );
       let responseJson = await response.json();
       console.log(responseJson);
-      this.setState({
-        googleResponse: responseJson,
-        uploading: false,
-      });
+      setState({ ...state, googleResponse: responseJson, uploading: false });
     } catch (error) {
       console.log(error);
     }
   };
+  const _handleImagePicked = async (pickerResult) => {
+    try {
+      setState({ ...state, uploading: true });
 
-  render() {
-    let { image } = this.state;
-
-    return (
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        {image ? null : (
-          <Text
-            style={{
-              fontSize: 20,
-              marginBottom: 20,
-              textAlign: "center",
-              marginHorizontal: 15,
-            }}
-          >
-            Example: Upload ImagePicker result
-          </Text>
-        )}
-
-        <Button
-          onPress={this._pickImage}
-          title="Pick an image from camera roll"
-        />
-
-        <Button onPress={this._takePhoto} title="Take a photo" />
-
-        <Button onPress={() => this.submitToGoogle()} title="Analyze!" />
-
-        {this._maybeRenderImage()}
-        {this._maybeRenderUploadingOverlay()}
-
-        {this.state.googleResponse && (
-          <Text
-            style={{ backgroundColor: "orange" }}
-            onPress={this._copyToClipboard}
-            onLongPress={this._share}
-          >
-            {JSON.stringify(this.state.googleResponse.responses)}
-          </Text>
-        )}
-
-        <StatusBar barStyle="default" />
-      </View>
-    );
-  }
-
-  _maybeRenderUploadingOverlay = () => {
-    if (this.state.uploading) {
-      return (
-        <View
-          style={[
-            StyleSheet.absoluteFill,
-            {
-              backgroundColor: "rgba(0,0,0,0.4)",
-              alignItems: "center",
-              justifyContent: "center",
-            },
-          ]}
-        >
-          <ActivityIndicator color="#fff" animating size="large" />
-        </View>
-      );
+      if (!pickerResult.cancelled) {
+        uploadUrl = await uploadImageAsync(pickerResult.uri);
+        setState({ ...state, image: uploadUrl });
+      }
+    } catch (e) {
+      console.log(e);
+      alert("Upload failed, sorry :(");
+    } finally {
+      setState({ ...state, uploading: false });
     }
   };
+  const _pickImage = async () => {
+    let pickerResult = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [16, 9],
+    });
 
-  _maybeRenderImage = () => {
-    let { image } = this.state;
+    _handleImagePicked(pickerResult);
+  };
+  const _takePhoto = async () => {
+    let pickerResult = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [16, 9],
+    });
+
+    _handleImagePicked(pickerResult);
+  };
+  const _copyToClipboard = () => {
+    Clipboard.setString(`${state.googleResponse}`);
+    alert("Copied image URL to clipboard");
+  };
+  const _share = () => {
+    Share.share({
+      message: state.image,
+      title: "Check out this photo",
+      url: state.image,
+    });
+  };
+  const _maybeRenderImage = () => {
+    let { image } = state;
     if (!image) {
       return;
     }
@@ -164,7 +141,7 @@ export default class App extends React.Component {
         </View>
 
         <Text
-          onLongPress={this._share}
+          onLongPress={_share()}
           style={{ paddingVertical: 10, paddingHorizontal: 10 }}
         >
           {image}
@@ -172,77 +149,93 @@ export default class App extends React.Component {
       </View>
     );
   };
-
-  _share = () => {
-    Share.share({
-      message: this.state.image,
-      title: "Check out this photo",
-      url: this.state.image,
-    });
-  };
-
-  _copyToClipboard = () => {
-    Clipboard.setString(`${this.state.googleResponse}`);
-    alert("Copied image URL to clipboard");
-  };
-
-  _takePhoto = async () => {
-    let pickerResult = await ImagePicker.launchCameraAsync({
-      allowsEditing: true,
-      aspect: [4, 3],
-    });
-
-    this._handleImagePicked(pickerResult);
-  };
-
-  _pickImage = async () => {
-    let pickerResult = await ImagePicker.launchImageLibraryAsync({
-      allowsEditing: true,
-      aspect: [4, 3],
-    });
-
-    this._handleImagePicked(pickerResult);
-  };
-
-  _handleImagePicked = async (pickerResult) => {
-    try {
-      this.setState({ uploading: true });
-
-      if (!pickerResult.cancelled) {
-        uploadUrl = await uploadImageAsync(pickerResult.uri);
-        this.setState({ image: uploadUrl });
-      }
-    } catch (e) {
-      console.log(e);
-      alert("Upload failed, sorry :(");
-    } finally {
-      this.setState({ uploading: false });
+  const _maybeRenderUploadingOverlay = () => {
+    if (state.uploading) {
+      return (
+        <View
+          style={[
+            StyleSheet.absoluteFill,
+            {
+              backgroundColor: "rgba(0,0,0,0.4)",
+              alignItems: "center",
+              justifyContent: "center",
+            },
+          ]}
+        >
+          <ActivityIndicator color="#fff" animating size="large" />
+        </View>
+      );
     }
   };
+  const uploadImageAsync = async () => {
+    // Why are we using XMLHttpRequest? See:
+    // https://github.com/expo/expo/issues/2402#issuecomment-443726662
+    const blob = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        resolve(xhr.response);
+      };
+      xhr.onerror = function (e) {
+        console.log(e);
+        reject(new TypeError("Network request failed"));
+      };
+      xhr.responseType = "blob";
+      xhr.open("GET", uri, true);
+      xhr.send(null);
+    });
+
+    const ref = firebase.storage().ref().child(uuid.v4());
+    const snapshot = await ref.put(blob);
+
+    // We're done with the blob, close and release it
+    blob.close();
+
+    return await snapshot.ref.getDownloadURL();
+  };
+  return (
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      {state.image ? null : (
+        <Text
+          style={{
+            fontSize: 20,
+            marginBottom: 20,
+            textAlign: "center",
+            marginHorizontal: 15,
+          }}
+        >
+          Example: Upload ImagePicker result
+        </Text>
+      )}
+
+      <Button onPress={_pickImage} title="Pick an image from camera roll" />
+
+      <Button
+        title="test auth"
+        onPress={async () => {
+          const data = await trello.auth();
+        }}
+      />
+
+      <Button onPress={_takePhoto} title="Take a photo" />
+
+      <Button onPress={() => submitToGoogle()} title="Analyze!" />
+
+      {_maybeRenderImage()}
+      {_maybeRenderUploadingOverlay()}
+
+      {state.googleResponse && (
+        <Text
+          style={{ backgroundColor: "orange" }}
+          onPress={_copyToClipboard()}
+          onLongPress={_share()}
+        >
+          {JSON.stringify(state.googleResponse.responses)}
+        </Text>
+      )}
+
+      <StatusBar barStyle="default" />
+    </View>
+  );
 }
 
-async function uploadImageAsync(uri) {
-  // Why are we using XMLHttpRequest? See:
-  // https://github.com/expo/expo/issues/2402#issuecomment-443726662
-  const blob = await new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-    xhr.onload = function () {
-      resolve(xhr.response);
-    };
-    xhr.onerror = function (e) {
-      console.log(e);
-      reject(new TypeError("Network request failed"));
-    };
-    xhr.responseType = "blob";
-    xhr.open("GET", uri, true);
-    xhr.send(null);
-  });
-
-  const ref = firebase.storage().ref().child(uuid.v4());
-  const snapshot = await ref.put(blob);
-
-  // We're done with the blob, close and release it
-  blob.close();
-
-  return await snapshot.ref.getDownloadURL();
-}
+export default App;
