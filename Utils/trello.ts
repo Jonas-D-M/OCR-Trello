@@ -15,14 +15,16 @@ export default (function () {
         response_type: "token",
       },
     };
-    await axios
+
+    const data = await axios
       .get(AuthEndpoint, config)
       .then((response) => {
         return response.data;
       })
       .catch((error) => {
-        console.error(error);
+        return null;
       });
+    return data;
   };
   return { auth };
 })();
