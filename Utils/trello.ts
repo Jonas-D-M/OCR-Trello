@@ -7,7 +7,6 @@ export default (function () {
 
     const config: AxiosRequestConfig = {
       params: {
-        callback_method: "postMessage",
         scope: "read,write,account",
         expiration: "never",
         name: "SAD Project",

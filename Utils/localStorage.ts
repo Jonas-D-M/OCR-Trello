@@ -17,5 +17,18 @@ export default (function () {
       return null;
     }
   };
-  return { create, read };
+  const update = async () => {};
+  const deleteItem = async (key: string) => {
+    await AsyncStorage.removeItem(key)
+      .then((value) => {
+        console.log(value);
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  };
+  const deleteAll = async () => {
+    await AsyncStorage.clear();
+  };
+  return { create, read, deleteItem, deleteAll };
 })();

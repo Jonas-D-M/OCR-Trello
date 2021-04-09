@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {} from "react-native";
 
 import { NavigationContainer } from "@react-navigation/native";
@@ -18,15 +18,22 @@ const Stack = createNativeStackNavigator();
 
 function App() {
   const screenOptions: NativeStackNavigationOptions = { headerShown: false };
-  const isLoggedIn = () => {
-    if (localStorage.read("@Token")) {
-      return true;
-    } else {
-      return false;
-    }
-  };
 
-  const [loggedIn, setLoggedIn] = useState(isLoggedIn);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [token, setToken] = useState(null);
+
+  useEffect(() => {
+    const isLoggedIn = async () => {
+      const token = await localStorage.read("@Token");
+      if (token) {
+        setToken(token);
+        setLoggedIn(true);
+      } else {
+        setLoggedIn(false);
+      }
+    };
+    isLoggedIn();
+  }, []);
 
   return (
     <SafeAreaProvider>

@@ -1,6 +1,8 @@
+import axios, { AxiosRequestConfig } from "axios";
 import React, { useState, useRef, useEffect } from "react";
 import { Modal, useWindowDimensions } from "react-native";
 import { WebView } from "react-native-webview";
+import Environment from "../../config/environment";
 import localStorage from "../../Utils/localStorage";
 
 interface ITrelloLogin {
@@ -54,11 +56,10 @@ function TrelloLogin({ data, show }: ITrelloLogin) {
             setShowModal(false);
           }
         }}
-        onMessage={(event) => {
+        onMessage={async (event) => {
           if (event.nativeEvent.data) {
-            console.log("accepted");
-
-            setToken(event.nativeEvent.data);
+            const code = event.nativeEvent.data;
+            setToken(code);
             setShowModal(false);
           }
         }}
