@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Button, StatusBar, View } from "react-native";
+import { Button, StatusBar, View, Image } from "react-native";
 import TrelloLogin from "../../Components/TrelloLogin";
 
 import trello from "../../Utils/trello";
+import { container } from "../../Styles/generic";
+import images from "../../Utils/images";
+import { imageStyle } from "../../Styles/components";
 
 function Login() {
   const [state, setState] = useState({
@@ -10,9 +13,13 @@ function Login() {
   });
 
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <StatusBar barStyle="default" />
+    <View style={[container.main, container.login]}>
       {state.data && <TrelloLogin data={state.data} show={true} />}
+      <Image
+        resizeMode={"contain"}
+        source={images.LOGO}
+        style={imageStyle.logo}
+      />
       <Button
         title="login to trello"
         onPress={async () => {
