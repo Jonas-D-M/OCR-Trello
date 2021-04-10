@@ -1,5 +1,4 @@
 import { Dimensions, StyleSheet } from "react-native";
-import { color } from "react-native-reanimated";
 import { theme, neutral } from "./colors";
 
 export const button = StyleSheet.create({
@@ -35,7 +34,7 @@ export const sections = StyleSheet.create({
     height: 32,
     width: 32,
     borderRadius: 2,
-    backgroundColor: "red",
+    backgroundColor: "white",
   },
 
   itemTitle: {
@@ -103,5 +102,46 @@ export const card = StyleSheet.create({
     height: 12,
     borderRadius: 3,
     marginRight: 4,
+  },
+});
+
+export const cta = StyleSheet.create({
+  container: {},
+  main: {
+    position: "absolute",
+    right: 15,
+    bottom: 15,
+    width: 50,
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: theme["green"],
+    borderRadius: 100,
+  },
+  small: {
+    width: 30,
+    height: 30,
+    backgroundColor: theme["green"],
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 100,
+  },
+  menuItemText: {
+    fontSize: 10,
+    paddingHorizontal: 4,
+    paddingVertical: 2,
+    backgroundColor: "white",
+    elevation: 3,
+    borderRadius: 3,
+    marginRight: 16,
+  },
+  text: {
+    fontSize: 20,
+    color: "white",
+  },
+  menuItemContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 16,
   },
 });

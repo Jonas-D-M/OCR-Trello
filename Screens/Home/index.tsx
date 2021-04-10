@@ -3,6 +3,7 @@ import React, { FunctionComponent, useEffect, useState } from "react";
 import { View, Text, SectionList, Image } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
+import CTA from "../../Components/CTA";
 import { sections } from "../../Styles/components";
 import { IBoard } from "../../Types/boards";
 import AxiosInstance from "../../Utils/axios";
@@ -107,6 +108,7 @@ const Home = () => {
           <Text style={sections.sectionHeader}>{title}</Text>
         )}
       />
+      <CTA />
     </SafeAreaView>
   );
 };
