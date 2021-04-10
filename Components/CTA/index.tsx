@@ -9,6 +9,7 @@ import {
 } from "react-native";
 
 import { cta } from "../../Styles/components";
+import googleVision from "../../Utils/googleVision";
 
 const MenuItems: FunctionComponent = () => {
   return (
@@ -25,13 +26,16 @@ const CTA = () => {
   const [visible, setVisible] = useState(false);
   const navigation = useNavigation();
 
+  const takePicture = async () => {
+    const string = await googleVision.createCardsFromPicture();
+    const titles = string.split(/\r?\n/);
+    console.log(titles);
+  };
+
   return (
     <View style={cta.container}>
       {/* <MenuItems /> */}
-      <TouchableOpacity
-        style={cta.main}
-        onPress={() => navigation.navigate("")}
-      >
+      <TouchableOpacity style={cta.main} onPress={takePicture}>
         <Text style={cta.text}>+</Text>
       </TouchableOpacity>
     </View>
