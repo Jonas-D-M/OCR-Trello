@@ -64,9 +64,10 @@ export const list = StyleSheet.create({
   container: {
     backgroundColor: neutral[300],
     borderRadius: 3,
-    paddingVertical: 8,
     marginHorizontal: 8,
     minWidth: 176,
+    paddingTop: 8,
+    paddingBottom: 16,
   },
   title: {
     fontWeight: "700",

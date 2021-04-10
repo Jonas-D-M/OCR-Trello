@@ -27,7 +27,7 @@ const List: FunctionComponent<ListProps> = ({ object }) => {
   }, []);
 
   return (
-    <ScrollView style={list.container}>
+    <ScrollView style={list.container} showsVerticalScrollIndicator={false}>
       <Text style={list.title}>{object.name}</Text>
       {cards.map((card, index) => (
         <Card key={index} object={card} />
