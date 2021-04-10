@@ -1,16 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Button, SectionList, StyleSheet } from "react-native";
+import { View, Text, SectionList, Image } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { container } from "../../Styles/generic";
+import { sections } from "../../Styles/components";
 import { IBoard } from "../../Types/boards";
 import AxiosInstance from "../../Utils/axios";
 import endpoints from "../../Utils/endpoints";
-import localStorage from "../../Utils/localStorage";
 
-const Item = ({ title }: any) => (
-  <View style={styles.item}>
-    <Text style={styles.title}>{title}</Text>
-  </View>
+const Item = ({ name, background, backgroundImage }: any) => (
+  <TouchableOpacity style={sections.itemContainer}>
+    {!backgroundImage ? (
+      <View style={[sections.itemSquare, { backgroundColor: background }]} />
+    ) : (
+      <Image
+        style={sections.itemSquare}
+        source={{ uri: backgroundImage[0].url }}
+      />
+    )}
+    <Text style={sections.itemTitle}>{name}</Text>
+  </TouchableOpacity>
 );
 
 const Home = () => {
@@ -23,23 +31,51 @@ const Home = () => {
         data: [],
       },
     ];
+
     boards.forEach((board, index) => {
       if (board.organization) {
-        if (DATA.some((e) => e.title !== board.organization?.displayName)) {
+        let exists = DATA.find(
+          (item) => item.title === board.organization?.displayName
+        );
+        if (!exists) {
           //@ts-ignore
-          DATA.push({ title: board.organization?.displayName, data: board });
+          DATA.push({
+            title: board.organization?.displayName,
+            data: [
+              {
+                //@ts-ignore
+                name: board.name,
+                //@ts-ignore
+                background: board.prefs.backgroundColor,
+                //@ts-ignore
+                backgroundImage: board.prefs.backgroundImageScaled,
+              },
+            ],
+          });
         } else {
-          // als de org bestaat
           const index = DATA.findIndex((obj) => {
             return obj.title === board.organization?.displayName;
           });
           //@ts-ignore
-          DATA[index].data.push(board);
+          DATA[index].data.push({
+            //@ts-ignore
+            name: board.name,
+            //@ts-ignore
+            background: board.prefs.backgroundColor,
+            //@ts-ignore
+            backgroundImage: board.prefs.backgroundImageScaled,
+          });
         }
       } else {
-        // als er geen org is
         // @ts-ignore
-        DATA[0].data.push(board);
+        DATA[0].data.push({
+          //@ts-ignore
+          name: board.name,
+          //@ts-ignore
+          background: board.prefs.backgroundColor,
+          //@ts-ignore
+          backgroundImage: board.prefs.backgroundImageScaled,
+        });
       }
     });
     return DATA;
@@ -56,6 +92,8 @@ const Home = () => {
 
       AxiosInstance.get<Array<IBoard>>(endpoints.boards, config)
         .then(({ data }) => {
+          console.log(getDATA(data));
+
           setData(getDATA(data));
         })
         .catch((error) => {
@@ -66,47 +104,23 @@ const Home = () => {
   }, []);
 
   return (
-    // <View style={container.main}>
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={sections.sectionListContainer}>
       <SectionList
         sections={data}
-        keyExtractor={(item, index) => item + index}
+        keyExtractor={(item, index) => item.name + index}
         renderItem={({ item }) => (
-          <Item title={item.organization.displayName} />
+          <Item
+            name={item.name}
+            background={item.background}
+            backgroundImage={item.backgroundImage}
+          />
         )}
         renderSectionHeader={({ section: { title } }) => (
-          <Text style={styles.header}>{title}</Text>
+          <Text style={sections.sectionHeader}>{title}</Text>
         )}
       />
     </SafeAreaView>
-    //   <Text>This is... HOME</Text>
-    //   <Button
-    //     title={"get token"}
-    //     onPress={async () => {
-    //       console.log(await localStorage.read("@Token"));
-    //     }}
-    //   />
-    // </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginHorizontal: 16,
-  },
-  item: {
-    backgroundColor: "#f9c2ff",
-    padding: 20,
-    marginVertical: 8,
-  },
-  header: {
-    fontSize: 32,
-    backgroundColor: "#fff",
-  },
-  title: {
-    fontSize: 24,
-  },
-});
 
 export default Home;
