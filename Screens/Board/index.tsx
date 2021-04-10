@@ -58,7 +58,7 @@ const Board = ({ route }: any) => {
           style={{ width: "100%", height: "100%" }}
         >
           <FlatList
-            style={board.container}
+            contentContainerStyle={board.container}
             data={lists}
             renderItem={({ item }) => <List object={item} />}
             keyExtractor={(item) => item.id}

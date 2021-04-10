@@ -53,19 +53,54 @@ export const sections = StyleSheet.create({
   },
 });
 
-export const list = StyleSheet.create({
-  container: {
-    backgroundColor: neutral[300],
-    borderRadius: 3,
-    padding: 8,
-    marginHorizontal: 8,
-    minWidth: 144,
-  },
-});
-
 export const board = StyleSheet.create({
   container: {
     paddingVertical: 16,
     paddingHorizontal: 8,
+  },
+});
+
+export const list = StyleSheet.create({
+  container: {
+    backgroundColor: neutral[300],
+    borderRadius: 3,
+    paddingVertical: 8,
+    marginHorizontal: 8,
+    minWidth: 176,
+  },
+  title: {
+    fontWeight: "700",
+    color: "black",
+    marginLeft: 8,
+    marginBottom: 16,
+    fontSize: 14,
+  },
+});
+
+export const card = StyleSheet.create({
+  container: {
+    borderRadius: 3,
+    backgroundColor: "white",
+    marginHorizontal: 4,
+    marginVertical: 2,
+    maxWidth: 176,
+    paddingVertical: 8,
+  },
+  title: {
+    fontSize: 14,
+    marginLeft: 4,
+    marginRight: 4,
+    fontWeight: "200",
+  },
+  labelContainer: {
+    marginHorizontal: 4,
+    flexDirection: "row",
+    marginBottom: 8,
+  },
+  tinyLabel: {
+    width: 24,
+    height: 12,
+    borderRadius: 3,
+    marginRight: 4,
   },
 });
