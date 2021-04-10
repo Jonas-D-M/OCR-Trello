@@ -1,49 +1,56 @@
 import { Share } from "react-native";
 import * as Permissions from "expo-permissions";
-import { ImagePicker } from "expo";
+import * as ImagePicker from "expo-image-picker";
 import uuid from "uuid";
 import Clipboard from "expo-clipboard";
 
 import firebase from "../Utils/firebase";
 import Environment from "../config/environment";
+import axios from "axios";
 
 export default (function () {
   let googleResponse: string, image: string;
 
   const sendImageToGoogle = async (image: any) => {
-    try {
-      let body = JSON.stringify({
-        requests: [
-          {
-            features: [{ type: "DOCUMENT_TEXT_DETECTION" }],
-            image: {
-              source: {
-                imageUri: image,
-              },
+    console.log("sending image to google");
+
+    let body = JSON.stringify({
+      requests: [
+        {
+          features: [{ type: "DOCUMENT_TEXT_DETECTION" }],
+          image: {
+            source: {
+              imageUri: image,
             },
           },
-        ],
-      });
+        },
+      ],
+    });
 
-      const response = await fetch(
+    return await axios
+      .post(
         "https://eu-vision.googleapis.com/v1/images:annotate?key=" +
           Environment["GOOGLE_CLOUD_VISION_API_KEY"],
+        body,
         {
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
           },
-          method: "POST",
-          body: body,
         }
-      );
-      return await response.json();
-    } catch (error) {
-      console.error(error);
-    }
+      )
+      .then(({ data }) => {
+        return data;
+      })
+      .catch((e) => {
+        console.error(e);
+        return null;
+      });
   };
 
   const uploadImageToFirebase = async (uri: string) => {
+    console.log("uploading image to firebase");
+
     // Why are we using XMLHttpRequest? See:
     // https://github.com/expo/expo/issues/2402#issuecomment-443726662
     const blob: any = await new Promise((resolve, reject) => {
@@ -70,10 +77,12 @@ export default (function () {
   };
 
   const handleImagePicked = async (pickerResult: any) => {
+    console.log("handling picked image");
     try {
       if (!pickerResult.cancelled) {
         const uploadUrl = await uploadImageToFirebase(pickerResult.uri);
-        return uploadUrl;
+        const scannedFile = await sendImageToGoogle(uploadUrl);
+        return scannedFile;
       }
     } catch (e) {
       alert("Upload failed, sorry :(");
@@ -81,19 +90,31 @@ export default (function () {
   };
 
   const pickImage = async () => {
+    console.log("picking image");
+
     let pickerResult = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
-      aspect: [16, 9],
+      aspect: [9, 16],
     });
     handleImagePicked(pickerResult);
   };
 
-  const takePhoto = async () => {
-    let pickerResult = await ImagePicker.launchCameraAsync({
-      allowsEditing: true,
-      aspect: [16, 9],
-    });
-    handleImagePicked(pickerResult);
+  const scanImage = async () => {
+    console.log("scanning image");
+    const tempUrl =
+      "https://firebasestorage.googleapis.com/v0/b/sad-project-4f5e7.appspot.com/o/171527385_809662072983091_1500622622613311676_n.jpg?alt=media&token=2f51e2b2-8fb5-4755-b180-901729caaa6c";
+    // let pickerResult = await ImagePicker.launchCameraAsync({
+    //   allowsEditing: true,
+    //   aspect: [9, 16],
+    // });
+    return await sendImageToGoogle(tempUrl)
+      .then((value) => {
+        return value;
+      })
+      .catch((e) => {
+        console.error(e);
+        return null;
+      });
   };
 
   const copyToClipBoard = () => {
@@ -121,12 +142,15 @@ export default (function () {
     await Permissions.askAsync(Permissions.CAMERA_ROLL);
   };
 
+  const createCardsFromPicture = async () => {
+    const data = await scanImage();
+    const string = data.responses[0].textAnnotations[0].description;
+    return string;
+  };
+
   return {
-    sendImageToGoogle,
     askPermissions,
     pickImage,
-    takePhoto,
-    copyToClipBoard,
-    share,
+    createCardsFromPicture,
   };
 })();

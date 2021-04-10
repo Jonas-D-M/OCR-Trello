@@ -41,8 +41,7 @@ function App() {
       <NavigationContainer>
         {!loggedIn && (
           <Stack.Navigator screenOptions={screenOptions}>
-            {" "}
-            <Stack.Screen name="Login" component={Login} />{" "}
+            <Stack.Screen name="Login" component={Login} />
           </Stack.Navigator>
         )}
         {loggedIn && (
