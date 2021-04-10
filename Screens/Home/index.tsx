@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { useNavigation } from "@react-navigation/core";
+import React, { FunctionComponent, useEffect, useState } from "react";
 import { View, Text, SectionList, Image } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -7,19 +8,36 @@ import { IBoard } from "../../Types/boards";
 import AxiosInstance from "../../Utils/axios";
 import endpoints from "../../Utils/endpoints";
 
-const Item = ({ name, background, backgroundImage }: any) => (
-  <TouchableOpacity style={sections.itemContainer}>
-    {!backgroundImage ? (
-      <View style={[sections.itemSquare, { backgroundColor: background }]} />
-    ) : (
-      <Image
-        style={sections.itemSquare}
-        source={{ uri: backgroundImage[0].url }}
-      />
-    )}
-    <Text style={sections.itemTitle}>{name}</Text>
-  </TouchableOpacity>
-);
+interface ItemProps {
+  object: IBoard;
+}
+
+const Item: FunctionComponent<ItemProps> = ({ object }) => {
+  const navigation = useNavigation();
+
+  const handlePress = () => {
+    navigation.navigate("Board", object);
+  };
+
+  return (
+    <TouchableOpacity style={sections.itemContainer} onPress={handlePress}>
+      {!object.prefs.backgroundImage ? (
+        <View
+          style={[
+            sections.itemSquare,
+            { backgroundColor: object.prefs.backgroundColor },
+          ]}
+        />
+      ) : (
+        <Image
+          style={sections.itemSquare}
+          source={{ uri: object.prefs.backgroundImageScaled[0].url }}
+        />
+      )}
+      <Text style={sections.itemTitle}>{object.name}</Text>
+    </TouchableOpacity>
+  );
+};
 
 const Home = () => {
   const [data, setData] = useState<any>();
@@ -41,41 +59,19 @@ const Home = () => {
           //@ts-ignore
           DATA.push({
             title: board.organization?.displayName,
-            data: [
-              {
-                //@ts-ignore
-                name: board.name,
-                //@ts-ignore
-                background: board.prefs.backgroundColor,
-                //@ts-ignore
-                backgroundImage: board.prefs.backgroundImageScaled,
-              },
-            ],
+            //@ts-ignore
+            data: [board],
           });
         } else {
           const index = DATA.findIndex((obj) => {
             return obj.title === board.organization?.displayName;
           });
           //@ts-ignore
-          DATA[index].data.push({
-            //@ts-ignore
-            name: board.name,
-            //@ts-ignore
-            background: board.prefs.backgroundColor,
-            //@ts-ignore
-            backgroundImage: board.prefs.backgroundImageScaled,
-          });
+          DATA[index].data.push(board);
         }
       } else {
         // @ts-ignore
-        DATA[0].data.push({
-          //@ts-ignore
-          name: board.name,
-          //@ts-ignore
-          background: board.prefs.backgroundColor,
-          //@ts-ignore
-          backgroundImage: board.prefs.backgroundImageScaled,
-        });
+        DATA[0].data.push(board);
       }
     });
     return DATA;
@@ -92,8 +88,6 @@ const Home = () => {
 
       AxiosInstance.get<Array<IBoard>>(endpoints.boards, config)
         .then(({ data }) => {
-          console.log(getDATA(data));
-
           setData(getDATA(data));
         })
         .catch((error) => {
@@ -108,13 +102,7 @@ const Home = () => {
       <SectionList
         sections={data}
         keyExtractor={(item, index) => item.name + index}
-        renderItem={({ item }) => (
-          <Item
-            name={item.name}
-            background={item.background}
-            backgroundImage={item.backgroundImage}
-          />
-        )}
+        renderItem={({ item }) => <Item object={item} />}
         renderSectionHeader={({ section: { title } }) => (
           <Text style={sections.sectionHeader}>{title}</Text>
         )}

@@ -7,9 +7,11 @@ const AxiosInstance = axios.create({
 });
 
 AxiosInstance.interceptors.request.use(async (config) => {
-  config.params["key"] = Environment["TRELLO_API_KEY"];
-  config.params["token"] = await localStorage.read("@Token");
+  console.log(Environment["TRELLO_API_KEY"]);
+  console.log(config);
 
+  config.params["token"] = await localStorage.read("@Token");
+  config.params["key"] = Environment["TRELLO_API_KEY"];
   return config;
 });
 

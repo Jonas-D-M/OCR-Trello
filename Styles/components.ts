@@ -52,3 +52,20 @@ export const sections = StyleSheet.create({
     backgroundColor: neutral[100],
   },
 });
+
+export const list = StyleSheet.create({
+  container: {
+    backgroundColor: neutral[300],
+    borderRadius: 3,
+    padding: 8,
+    marginHorizontal: 8,
+    minWidth: 144,
+  },
+});
+
+export const board = StyleSheet.create({
+  container: {
+    paddingVertical: 16,
+    paddingHorizontal: 8,
+  },
+});

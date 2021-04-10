@@ -12,6 +12,7 @@ import {
 import Login from "./Screens/Login";
 import localStorage from "./Utils/localStorage";
 import Home from "./Screens/Home";
+import Board from "./Screens/Board";
 
 enableScreens();
 const Stack = createNativeStackNavigator();
@@ -38,10 +39,18 @@ function App() {
   return (
     <SafeAreaProvider>
       <NavigationContainer>
-        <Stack.Navigator screenOptions={screenOptions}>
-          {!loggedIn && <Stack.Screen name="Login" component={Login} />}
-          {loggedIn && <Stack.Screen name="Home" component={Home} />}
-        </Stack.Navigator>
+        {!loggedIn && (
+          <Stack.Navigator screenOptions={screenOptions}>
+            {" "}
+            <Stack.Screen name="Login" component={Login} />{" "}
+          </Stack.Navigator>
+        )}
+        {loggedIn && (
+          <Stack.Navigator screenOptions={screenOptions}>
+            <Stack.Screen name="Home" component={Home} />
+            <Stack.Screen name="Board" component={Board} />
+          </Stack.Navigator>
+        )}
       </NavigationContainer>
       <StatusBar style={"auto"} />
     </SafeAreaProvider>
