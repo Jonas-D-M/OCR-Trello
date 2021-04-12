@@ -23,13 +23,14 @@ const MenuItems: FunctionComponent = () => {
 };
 
 const CTA = () => {
-  const [visible, setVisible] = useState(false);
   const navigation = useNavigation();
 
   const takePicture = async () => {
-    const string = await googleVision.createCardsFromPicture();
-    const titles = string.split(/\r?\n/);
-    console.log(titles);
+    // const string: string = await googleVision.createCardsFromPicture();
+    // const tempString = string.split("* ").join("");
+    // const titles = tempString.split(/\r?\n/).pop();
+    // navigation.navigate("NewCards", { titles });
+    navigation.navigate("NewCards");
   };
 
   return (

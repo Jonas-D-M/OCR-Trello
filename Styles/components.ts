@@ -145,3 +145,41 @@ export const cta = StyleSheet.create({
     marginBottom: 16,
   },
 });
+
+export const picker = StyleSheet.create({
+  container: {
+    marginTop: 8,
+    paddingHorizontal: 16,
+  },
+  title: {},
+  picker: {},
+  divider: {
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderColor: neutral[600],
+    marginHorizontal: 8,
+    marginTop: -10,
+  },
+  itemDisabled: {
+    color: neutral[200],
+  },
+  header: {
+    marginBottom: 16,
+  },
+});
+
+export const newCard = StyleSheet.create({
+  main: {
+    padding: 16,
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: "700",
+  },
+  card: {
+    backgroundColor: "white",
+    borderRadius: 3,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+  },
+  description: {},
+});

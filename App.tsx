@@ -13,6 +13,7 @@ import Login from "./Screens/Login";
 import localStorage from "./Utils/localStorage";
 import Home from "./Screens/Home";
 import Board from "./Screens/Board";
+import NewCards from "./Screens/NewCards";
 
 enableScreens();
 const Stack = createNativeStackNavigator();
@@ -48,6 +49,7 @@ function App() {
           <Stack.Navigator screenOptions={screenOptions}>
             <Stack.Screen name="Home" component={Home} />
             <Stack.Screen name="Board" component={Board} />
+            <Stack.Screen name="NewCards" component={NewCards} />
           </Stack.Navigator>
         )}
       </NavigationContainer>
