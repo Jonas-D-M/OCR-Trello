@@ -160,7 +160,7 @@ export const picker = StyleSheet.create({
     marginTop: -10,
   },
   itemDisabled: {
-    color: neutral[200],
+    color: "white",
   },
   header: {
     marginBottom: 16,
@@ -169,7 +169,9 @@ export const picker = StyleSheet.create({
 
 export const newCard = StyleSheet.create({
   main: {
-    padding: 16,
+    width: Dimensions.get("window").width,
+    paddingHorizontal: 16,
+    paddingVertical: 80,
   },
   title: {
     fontSize: 16,
@@ -182,4 +184,39 @@ export const newCard = StyleSheet.create({
     paddingVertical: 8,
   },
   description: {},
+  input: {
+    borderBottomWidth: 1,
+    borderBottomColor: theme["blue-200"],
+    marginTop: 8,
+    marginBottom: 16,
+  },
+  inputFocus: {
+    borderBottomColor: theme["green"],
+  },
+});
+
+export const dot = StyleSheet.create({
+  dot: {
+    height: 6,
+    width: 6,
+    borderRadius: 50,
+    backgroundColor: neutral["300"],
+    marginHorizontal: 1,
+  },
+  active: {
+    backgroundColor: theme["blue-100"],
+  },
+});
+
+export const pagination = StyleSheet.create({
+  main: {
+    marginTop: 32,
+    flexDirection: "row",
+    alignSelf: "center",
+    marginBottom: 16,
+  },
+});
+
+export const carousel = StyleSheet.create({
+  container: {},
 });

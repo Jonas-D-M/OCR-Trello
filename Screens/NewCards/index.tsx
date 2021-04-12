@@ -1,10 +1,29 @@
 import { Picker } from "@react-native-picker/picker";
-import React, { FunctionComponent, useEffect, useState } from "react";
-import { View, Text } from "react-native";
+import React, {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import {
+  View,
+  Text,
+  Button,
+  Dimensions,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import NewCardInput from "../../Components/NewCardInput";
-import { picker } from "../../Styles/components";
+import { carousel, picker } from "../../Styles/components";
 import { container } from "../../Styles/generic";
+import { useNavigation } from "@react-navigation/core";
+import Pagination from "../../Components/Pagination";
+import { FlatList } from "react-native-gesture-handler";
+import { theme } from "../../Styles/colors";
+
+const { width: windowWidth, height: windowHeight } = Dimensions.get("window");
 
 const Header: FunctionComponent = () => {
   const [selectedValue, setSelectedValue] = useState({ board: "", list: "" });
@@ -14,7 +33,6 @@ const Header: FunctionComponent = () => {
   useEffect(() => {
     if (selectedValue.board) {
       setBoardSelected(true);
-      setDisabledStyle({});
     }
   }, [selectedValue]);
 
@@ -48,7 +66,6 @@ const Header: FunctionComponent = () => {
           onValueChange={(value) => {
             setSelectedValue({ ...selectedValue, list: value.toString() });
           }}
-          itemStyle={disabledStyle}
         >
           <Picker.Item label="Kies lijst" value="java" />
         </Picker>
@@ -58,12 +75,75 @@ const Header: FunctionComponent = () => {
   );
 };
 
-const NewCards = ({ route }: any) => {
-  const titles = route.params;
+const NewCards = () => {
+  const [activePage, setActivePage] = useState(0);
+
+  const [index, setIndex] = useState(0);
+  const indexRef = useRef(index);
+  indexRef.current = index;
+
+  const titles = [
+    "ask for feedback",
+    "test app",
+    "Add cards",
+    "show to martijn",
+  ];
+
+  const renderItem = useCallback(function renderItem({ item }) {
+    return <NewCardInput background={theme["blue-100"]} title={item} />;
+  }, []);
+
+  const flatListOptimizationProps = {
+    initialNumToRender: 0,
+    maxToRenderPerBatch: 1,
+    removeClippedSubviews: true,
+    scrollEventThrottle: 16,
+    windowSize: 2,
+    keyExtractor: useCallback((s) => String(s), []),
+    getItemLayout: useCallback(
+      (_, index) => ({
+        index,
+        length: windowWidth,
+        offset: index * windowWidth,
+      }),
+      []
+    ),
+  };
+
+  const onScroll = useCallback((event) => {
+    const slideSize = event.nativeEvent.layoutMeasurement.width;
+    const index = event.nativeEvent.contentOffset.x / slideSize;
+    const roundIndex = Math.round(index);
+
+    const distance = Math.abs(roundIndex - index);
+    // Prevent one pixel triggering setIndex in the middle
+    // of the transition. With this we have to scroll a bit
+    // more to trigger the index change.
+    const isNoMansLand = 0.4 < distance;
+    if (roundIndex !== indexRef.current && !isNoMansLand) {
+      setIndex(roundIndex);
+    }
+  }, []);
+
   return (
     <SafeAreaView style={container.main}>
-      <Header />
-      <NewCardInput background={"blue"} title={"testcard"} />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "position"}
+      >
+        <Header />
+        <FlatList
+          data={titles}
+          renderItem={renderItem}
+          pagingEnabled
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          bounces={false}
+          onScroll={onScroll}
+          {...flatListOptimizationProps}
+          style={carousel.container}
+        />
+      </KeyboardAvoidingView>
+      <Pagination length={titles.length} activePage={index} />
     </SafeAreaView>
   );
 };
