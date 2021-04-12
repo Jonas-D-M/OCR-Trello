@@ -1,4 +1,4 @@
-import { Dimensions, StyleSheet } from "react-native";
+import { Dimensions, Platform, StyleSheet, StatusBar } from "react-native";
 import { theme, neutral } from "./colors";
 
 export const button = StyleSheet.create({
@@ -219,4 +219,25 @@ export const pagination = StyleSheet.create({
 
 export const carousel = StyleSheet.create({
   container: {},
+});
+
+export const header = StyleSheet.create({
+  container: {
+    height: 72,
+    // marginBottom: -24,
+    backgroundColor: theme["blue-100"],
+    width: "100%",
+    justifyContent: "center",
+    // opacity: 0.2,
+  },
+  titleContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: Platform.OS === "ios" ? 0 : StatusBar.currentHeight,
+  },
+  title: {
+    color: "white",
+    fontSize: 24,
+  },
+  actionContainer: {},
 });

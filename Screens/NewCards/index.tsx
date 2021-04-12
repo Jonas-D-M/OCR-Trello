@@ -75,10 +75,11 @@ const Header: FunctionComponent = () => {
   );
 };
 
-const NewCards = () => {
-  const [activePage, setActivePage] = useState(0);
+const NewCards = ({ route }: any) => {
+  const params = route.params;
 
   const [index, setIndex] = useState(0);
+  const [endReached, setEndReached] = useState(false);
   const indexRef = useRef(index);
   indexRef.current = index;
 
@@ -88,6 +89,14 @@ const NewCards = () => {
     "Add cards",
     "show to martijn",
   ];
+
+  useEffect(() => {
+    if (index + 1 === titles.length) {
+      setEndReached(true);
+    } else {
+      setEndReached(false);
+    }
+  }, [index]);
 
   const renderItem = useCallback(function renderItem({ item }) {
     return <NewCardInput background={theme["blue-100"]} title={item} />;
@@ -144,6 +153,7 @@ const NewCards = () => {
         />
       </KeyboardAvoidingView>
       <Pagination length={titles.length} activePage={index} />
+      {endReached && <Button title={"kaarten toevoegen"} onPress={() => {}} />}
     </SafeAreaView>
   );
 };
