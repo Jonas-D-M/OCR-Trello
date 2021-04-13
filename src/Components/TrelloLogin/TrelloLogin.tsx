@@ -2,7 +2,9 @@ import axios, { AxiosRequestConfig } from "axios";
 import React, { useState, useRef, useEffect } from "react";
 import { Modal, useWindowDimensions } from "react-native";
 import { WebView } from "react-native-webview";
+import { useDispatch } from "react-redux";
 import Environment from "../../config/environment";
+import { logIn } from "../../Redux/Actions";
 import localStorage from "../../Utils/localStorage";
 
 interface ITrelloLogin {
@@ -11,6 +13,7 @@ interface ITrelloLogin {
 }
 
 function TrelloLogin({ data, show }: ITrelloLogin) {
+  const dispatch = useDispatch();
   const windowWidth = useWindowDimensions().width;
   const windowHeight = useWindowDimensions().height;
 
@@ -31,7 +34,7 @@ function TrelloLogin({ data, show }: ITrelloLogin) {
 
   useEffect(() => {
     if (token) {
-      localStorage.create("@Token", token);
+      dispatch(logIn(token));
     }
   }, [token]);
 

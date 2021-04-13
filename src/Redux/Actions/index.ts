@@ -1,4 +1,4 @@
-import { LOG_IN, LOG_OUT } from "../Reducers/loginReducer";
+import { LOG_IN, LOG_OUT } from "../Reducers/user";
 
 export const logIn = (token: string) => {
   return { type: LOG_IN, payload: token };

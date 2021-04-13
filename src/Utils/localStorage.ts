@@ -11,10 +11,9 @@ export default (function () {
     const value = await AsyncStorage.getItem(key);
     if (value) {
       const parsed = JSON.parse(value);
-      console.log(parsed);
       return parsed;
     } else {
-      return null;
+      return undefined;
     }
   };
   const update = async () => {};
