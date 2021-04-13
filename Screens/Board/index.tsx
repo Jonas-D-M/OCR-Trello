@@ -17,11 +17,13 @@ import AxiosInstance from "../../Utils/axios";
 
 const Board = ({ route }: any) => {
   const boardObject: IBoard = route.params.object;
-  console.log(route.params);
   const navigation = useNavigation();
 
   useEffect(() => {
-    navigation.setOptions({ title: route.params.title });
+    navigation.setOptions({
+      title: route.params.title,
+      color: boardObject.prefs.backgroundColor,
+    });
   }, []);
 
   const [lists, setLists] = useState<Array<IList>>([]);

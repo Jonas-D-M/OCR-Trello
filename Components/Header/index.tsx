@@ -6,6 +6,8 @@ import { View, Text } from "react-native";
 import { header } from "../../Styles/components";
 import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import colors from "../../Utils/colors";
+import { theme } from "../../Styles/colors";
 
 interface HeaderProps {
   navigation: any;
@@ -18,15 +20,7 @@ const Header: FunctionComponent<HeaderProps> = ({
   options,
   backButton = true,
 }) => {
-  //TODO: set title with redux
-
   const route = useRoute();
-
-  useEffect(() => {
-    console.log(options);
-    console.log("navigation: ", navigation);
-  }, [navigation]);
-
   const goBack = () => {
     navigation.goBack();
   };
@@ -35,7 +29,10 @@ const Header: FunctionComponent<HeaderProps> = ({
     <View
       style={{
         ...header.container,
-        // backgroundColor: colors.darkenHex("#0079BF", -0.4),
+        backgroundColor:
+          route.name === "Board"
+            ? colors.darkenHex(options.color, -0.4)
+            : theme["blue-100"],
       }}
     >
       {backButton && (
@@ -49,10 +46,14 @@ const Header: FunctionComponent<HeaderProps> = ({
       <View style={header.titleContainer}>
         <Text style={header.title}>{options.title}</Text>
       </View>
-      {/* <StatusBar
+      <StatusBar
         style={"light"}
-        backgroundColor={colors.darkenHex("#0079BF", -0.5)}
-      /> */}
+        backgroundColor={
+          route.name === "Board"
+            ? colors.darkenHex(options.color, -0.5)
+            : theme["blue-100"]
+        }
+      />
     </View>
   );
 };

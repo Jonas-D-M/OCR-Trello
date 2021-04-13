@@ -17,7 +17,11 @@ const Item: FunctionComponent<ItemProps> = ({ object }) => {
   const navigation = useNavigation();
 
   const handlePress = () => {
-    navigation.navigate("Board", { title: object.name, object });
+    navigation.navigate("Board", {
+      title: object.name,
+      object,
+      color: object.prefs.backgroundColor,
+    });
   };
 
   return (
