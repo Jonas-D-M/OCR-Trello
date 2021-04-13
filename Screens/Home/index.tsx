@@ -99,7 +99,7 @@ const Home = () => {
   }, []);
 
   return (
-    <SafeAreaView style={sections.sectionListContainer}>
+    <>
       <SectionList
         sections={data}
         keyExtractor={(item, index) => item.name + index}
@@ -109,7 +109,7 @@ const Home = () => {
         )}
       />
       <CTA />
-    </SafeAreaView>
+    </>
   );
 };
 

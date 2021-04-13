@@ -30,7 +30,7 @@ const Header: FunctionComponent<HeaderProps> = ({
           ...header.actionContainer,
         }}
       >
-        <Text>t</Text>
+        <Text>HALLO</Text>
       </View>
       <View style={header.titleContainer}>
         <Text style={header.title}>{options.title}</Text>

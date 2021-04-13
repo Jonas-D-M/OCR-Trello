@@ -227,7 +227,8 @@ export const header = StyleSheet.create({
     // marginBottom: -24,
     backgroundColor: theme["blue-100"],
     width: "100%",
-    justifyContent: "center",
+    flexDirection: "row",
+    alignItems: "center",
     // opacity: 0.2,
   },
   titleContainer: {

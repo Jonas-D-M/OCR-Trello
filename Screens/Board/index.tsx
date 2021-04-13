@@ -51,7 +51,8 @@ const Board = ({ route }: any) => {
   ];
 
   return (
-    <SafeAreaView style={styles.container}>
+    // <SafeAreaView style={styles.container}>
+    <>
       {boardObject.prefs.backgroundImage ? (
         <ImageBackground
           source={{ uri: boardObject.prefs.backgroundImage }}
@@ -79,7 +80,8 @@ const Board = ({ route }: any) => {
           showsHorizontalScrollIndicator={false}
         />
       )}
-    </SafeAreaView>
+    </>
+    // </SafeAreaView>
   );
 };
 

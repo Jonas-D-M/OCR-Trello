@@ -20,7 +20,7 @@ import { carousel, picker } from "../../Styles/components";
 import { container } from "../../Styles/generic";
 import { useNavigation } from "@react-navigation/core";
 import Pagination from "../../Components/Pagination";
-import { FlatList } from "react-native-gesture-handler";
+import { FlatList, ScrollView } from "react-native-gesture-handler";
 import { theme } from "../../Styles/colors";
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get("window");
@@ -135,7 +135,8 @@ const NewCards = ({ route }: any) => {
   }, []);
 
   return (
-    <SafeAreaView style={container.main}>
+    // <SafeAreaView style={container.main}>
+    <ScrollView contentContainerStyle={container.main}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "position"}
       >
@@ -154,7 +155,8 @@ const NewCards = ({ route }: any) => {
       </KeyboardAvoidingView>
       <Pagination length={titles.length} activePage={index} />
       {endReached && <Button title={"kaarten toevoegen"} onPress={() => {}} />}
-    </SafeAreaView>
+    </ScrollView>
+    // </SafeAreaView>
   );
 };
 
