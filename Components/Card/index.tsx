@@ -10,14 +10,16 @@ interface CardProps {
 const Card: FunctionComponent<CardProps> = ({ object }) => {
   return (
     <View style={card.container}>
-      <View style={card.labelContainer}>
-        {object.labels.map((label, index) => (
-          <View
-            key={index}
-            style={[card.tinyLabel, { backgroundColor: label.color }]}
-          />
-        ))}
-      </View>
+      {object.labels.length > 0 && (
+        <View style={card.labelContainer}>
+          {object.labels.map((label, index) => (
+            <View
+              key={index}
+              style={[card.tinyLabel, { backgroundColor: label.color }]}
+            />
+          ))}
+        </View>
+      )}
       <Text style={card.title}>{object.name}</Text>
     </View>
   );
