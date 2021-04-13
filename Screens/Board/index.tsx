@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/core";
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -15,7 +16,14 @@ import { IList } from "../../Types/lists";
 import AxiosInstance from "../../Utils/axios";
 
 const Board = ({ route }: any) => {
-  const boardObject: IBoard = route.params;
+  const boardObject: IBoard = route.params.object;
+  console.log(route.params);
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    navigation.setOptions({ title: route.params.title });
+  }, []);
+
   const [lists, setLists] = useState<Array<IList>>([]);
 
   useEffect(() => {
