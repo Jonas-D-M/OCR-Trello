@@ -229,16 +229,22 @@ export const header = StyleSheet.create({
     width: "100%",
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "flex-start",
     // opacity: 0.2,
   },
   titleContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
     marginTop: Platform.OS === "ios" ? 0 : StatusBar.currentHeight,
   },
   title: {
+    marginLeft: 16,
     color: "white",
     fontSize: 24,
   },
-  actionContainer: {},
+  actionContainer: {
+    marginTop: Platform.OS === "ios" ? 0 : StatusBar.currentHeight,
+  },
+  icon: {
+    color: "white",
+    marginLeft: 16,
+  },
 });

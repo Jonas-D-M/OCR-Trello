@@ -59,17 +59,52 @@ function App() {
             <Stack.Screen
               name="Home"
               component={Home}
-              options={{ ...renderCustomHeader, title: "Borden" }}
+              options={{
+                header: ({ scene, navigation }: any) => {
+                  const { options } = scene.descriptor;
+                  return (
+                    <Header
+                      navigation={navigation}
+                      options={options}
+                      backButton={false}
+                    />
+                  );
+                },
+                title: "Borden",
+              }}
             />
             <Stack.Screen
               name="Board"
               component={Board}
-              options={{ ...renderCustomHeader }}
+              options={{
+                header: ({ scene, navigation }: any) => {
+                  const { options } = scene.descriptor;
+                  return (
+                    <Header
+                      navigation={navigation}
+                      options={options}
+                      backButton={true}
+                    />
+                  );
+                },
+              }}
             />
             <Stack.Screen
               name="NewCards"
               component={NewCards}
-              options={{ ...renderCustomHeader, title: "Kaarten toevoegen" }}
+              options={{
+                header: ({ scene, navigation }: any) => {
+                  const { options } = scene.descriptor;
+                  return (
+                    <Header
+                      navigation={navigation}
+                      options={options}
+                      backButton={true}
+                    />
+                  );
+                },
+                title: "Kaarten toevoegen",
+              }}
             />
           </Stack.Navigator>
         )}
