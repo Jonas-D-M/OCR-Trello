@@ -37,6 +37,7 @@ const Header: FunctionComponent = () => {
       value: "",
     },
   ]);
+
   const [possibleLists, setPossibleLists] = useState([
     { label: "Kies lijst", value: "" },
   ]);
@@ -46,10 +47,12 @@ const Header: FunctionComponent = () => {
   const { boards } = useSelector((state) => state.boards);
 
   useEffect(() => {
-    boards.forEach((item: any) => {
-      const newItem = { label: item.name, value: item.id };
-      setPossibleBoards((pb) => [...pb, newItem]);
-    });
+    if (possibleBoards.length === 1) {
+      boards.forEach((item: any) => {
+        const newItem = { label: item.name, value: item.id };
+        setPossibleBoards((pb) => [...pb, newItem]);
+      });
+    }
   }, [boards]);
 
   useEffect(() => {
@@ -191,7 +194,7 @@ const NewCards = ({ route }: any) => {
           bounces={false}
           onScroll={onScroll}
           {...flatListOptimizationProps}
-          style={carousel.container}
+          contentContainerStyle={carousel.container}
         />
       </KeyboardAvoidingView>
       <Pagination length={titles.length} activePage={index} />

@@ -54,6 +54,7 @@ export const sections = StyleSheet.create({
 
 export const board = StyleSheet.create({
   container: {
+    flexGrow: 1,
     paddingVertical: 16,
     paddingHorizontal: 8,
   },

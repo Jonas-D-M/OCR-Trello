@@ -1,5 +1,3 @@
-import { IBoard } from "../../Types/boards";
-
 export const STORE_BOARDS = "STORE_BOARDS";
 
 interface boardsState {
