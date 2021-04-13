@@ -4,7 +4,7 @@ import * as ImagePicker from "expo-image-picker";
 import uuid from "uuid";
 import Clipboard from "expo-clipboard";
 
-import firebase from "../Utils/firebase";
+import firebase from "./firebase";
 import Environment from "../config/environment";
 import axios from "axios";
 

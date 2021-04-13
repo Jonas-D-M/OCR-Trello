@@ -11,13 +11,13 @@ import {
   StackNavigationOptions,
 } from "@react-navigation/stack";
 
-import Login from "./Screens/Login";
-import localStorage from "./Utils/localStorage";
-import Home from "./Screens/Home";
-import Board from "./Screens/Board";
-import NewCards from "./Screens/NewCards";
-import { theme } from "./Styles/colors";
-import Header from "./Components/Header";
+import Login from "./src/Screens/Login";
+import localStorage from "./src/Utils/localStorage";
+import Home from "./src/Screens/Home";
+import Board from "./src/Screens/Board";
+import NewCards from "./src/Screens/NewCards";
+import { theme } from "./src/Styles/colors";
+import Header from "./src/Components/Header";
 
 enableScreens();
 const Stack = createStackNavigator();
