@@ -13,6 +13,27 @@ interface ItemProps {
   object: IBoard;
 }
 
+interface BoardsWithStarProps {
+  boards: Array<IBoard>;
+}
+
+const BoardsWithStar: FunctionComponent<BoardsWithStarProps> = ({ boards }) => {
+  useEffect(() => {
+    console.log(boards.length);
+  }, [boards]);
+  return (
+    // <View>
+    //   <Text style={sections.sectionHeader}>Borden met ster</Text>
+    //   {boards.map((board) => (
+    //     <TouchableOpacity>
+
+    //     </TouchableOpacity>
+    //   ))}
+    // </View>
+    <></>
+  );
+};
+
 const Item: FunctionComponent<ItemProps> = ({ object }) => {
   const navigation = useNavigation();
 
@@ -53,9 +74,14 @@ const Home = () => {
         title: "Persoonlijke borden",
         data: [],
       },
+      // { title: "Borden met ster", data: [] },
     ];
 
     boards.forEach((board, index) => {
+      // if (board.starred) {
+      //   //@ts-ignore
+      //   DATA[1].data.push(board);
+      // }
       if (board.organization) {
         let exists = DATA.find(
           (item) => item.title === board.organization?.displayName
@@ -105,6 +131,7 @@ const Home = () => {
   return (
     <>
       <SectionList
+        // ListHeaderComponent={<BoardsWithStar boards={data[1].data} />}
         sections={data}
         keyExtractor={(item, index) => item.name + index}
         renderItem={({ item }) => <Item object={item} />}
