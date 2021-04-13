@@ -1,11 +1,8 @@
-import axios, { AxiosRequestConfig } from "axios";
 import React, { useState, useRef, useEffect } from "react";
 import { Modal, useWindowDimensions } from "react-native";
 import { WebView } from "react-native-webview";
 import { useDispatch } from "react-redux";
-import Environment from "../../config/environment";
 import { logIn } from "../../Redux/Actions";
-import localStorage from "../../Utils/localStorage";
 
 interface ITrelloLogin {
   data: string | null;

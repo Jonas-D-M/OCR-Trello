@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { Button, StatusBar, View, Image } from "react-native";
+import React, { useState } from "react";
+import { Button, View, Image } from "react-native";
 import TrelloLogin from "../../Components/TrelloLogin";
 
 import trello from "../../Utils/trello";
 import { container } from "../../Styles/generic";
 import images from "../../Utils/images";
 import { imageStyle } from "../../Styles/components";
-import { useDispatch } from "react-redux";
 
 function Login() {
   const [state, setState] = useState({
