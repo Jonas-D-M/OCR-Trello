@@ -64,16 +64,21 @@ export const list = StyleSheet.create({
     backgroundColor: neutral[300],
     borderRadius: 3,
     marginHorizontal: 8,
-    minWidth: 176,
+    maxWidth: 184,
+    width: 184,
     paddingTop: 8,
     paddingBottom: 16,
   },
   title: {
     fontWeight: "700",
     color: "black",
-    marginLeft: 8,
+    marginHorizontal: 8,
     marginBottom: 16,
     fontSize: 14,
+  },
+  contentContainer: {
+    // justifyContent: "flex-start",
+    // flexGrow: 0,
   },
 });
 
@@ -84,7 +89,9 @@ export const card = StyleSheet.create({
     marginHorizontal: 4,
     marginVertical: 2,
     maxWidth: 176,
+    width: "100%",
     paddingVertical: 8,
+    elevation: 1,
   },
   title: {
     fontSize: 14,
