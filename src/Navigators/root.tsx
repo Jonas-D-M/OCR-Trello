@@ -7,10 +7,6 @@ const RootNavigator = () => {
   // @ts-ignore
   const { user } = useSelector((state) => state);
 
-  useEffect(() => {
-    console.log(user.loggedIn);
-  }, [user]);
-
   return user.loggedIn ? <ApplicationNavigator /> : <LoginNavigator />;
 };
 

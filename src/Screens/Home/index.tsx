@@ -3,7 +3,9 @@ import React, { FunctionComponent, useEffect, useState } from "react";
 import { View, Text, SectionList, Image } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useDispatch } from "react-redux";
 import CTA from "../../Components/CTA";
+import { addBoards } from "../../Redux/Actions";
 import { sections } from "../../Styles/components";
 import { IBoard } from "../../Types/boards";
 import AxiosInstance from "../../Utils/axios";
@@ -67,6 +69,7 @@ const Item: FunctionComponent<ItemProps> = ({ object }) => {
 
 const Home = () => {
   const [data, setData] = useState<any>();
+  const dispatch = useDispatch();
 
   const getDATA = (boards: Array<IBoard>) => {
     const DATA = [
@@ -119,6 +122,7 @@ const Home = () => {
 
       AxiosInstance.get<Array<IBoard>>(endpoints.boards, config)
         .then(({ data }) => {
+          dispatch(addBoards(data));
           setData(getDATA(data));
         })
         .catch((error) => {

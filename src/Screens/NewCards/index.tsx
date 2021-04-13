@@ -22,17 +22,55 @@ import { useNavigation } from "@react-navigation/core";
 import Pagination from "../../Components/Pagination";
 import { FlatList, ScrollView } from "react-native-gesture-handler";
 import { theme } from "../../Styles/colors";
+import { useSelector } from "react-redux";
+import AxiosInstance from "../../Utils/axios";
+import { IList } from "../../Types/lists";
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get("window");
 
 const Header: FunctionComponent = () => {
   const [selectedValue, setSelectedValue] = useState({ board: "", list: "" });
-  const [boardSelected, setBoardSelected] = useState(false);
+  const [enabled, setEnabled] = useState(false);
+  const [possibleBoards, setPossibleBoards] = useState([
+    {
+      label: "Kies bord",
+      value: "",
+    },
+  ]);
+  const [possibleLists, setPossibleLists] = useState([
+    { label: "Kies lijst", value: "" },
+  ]);
   const [disabledStyle, setDisabledStyle] = useState<any>(picker.itemDisabled);
 
+  // @ts-ignore
+  const { boards } = useSelector((state) => state.boards);
+
   useEffect(() => {
+    boards.forEach((item: any) => {
+      const newItem = { label: item.name, value: item.id };
+      setPossibleBoards((pb) => [...pb, newItem]);
+    });
+  }, [boards]);
+
+  useEffect(() => {
+    const fetchPossibleLists = async () => {
+      AxiosInstance.get<Array<IList>>(`/boards/${selectedValue.board}/lists`, {
+        params: {},
+      })
+        .then(({ data }) => {
+          data.forEach((list) => {
+            const newItem = { label: list.name, value: list.id };
+            setPossibleLists((pl) => [...pl, newItem]);
+          });
+        })
+        .catch((e) => {
+          console.error(e);
+        });
+    };
     if (selectedValue.board) {
-      setBoardSelected(true);
+      setPossibleLists([{ label: "Kies lijst", value: "" }]);
+      fetchPossibleLists();
+      setEnabled(true);
     }
   }, [selectedValue]);
 
@@ -49,8 +87,9 @@ const Header: FunctionComponent = () => {
             setSelectedValue({ ...selectedValue, board: value.toString() });
           }}
         >
-          <Picker.Item label="Java" value="java" />
-          <Picker.Item label="JavaScript" value="js" />
+          {possibleBoards.map((board, index) => (
+            <Picker.Item key={index} label={board.label} value={board.value} />
+          ))}
         </Picker>
         <View style={picker.divider} />
       </View>
@@ -61,13 +100,15 @@ const Header: FunctionComponent = () => {
           mode="dialog"
           prompt="Kies lijst"
           style={picker.picker}
-          enabled={boardSelected}
+          enabled={enabled}
           selectedValue={selectedValue.list}
           onValueChange={(value) => {
             setSelectedValue({ ...selectedValue, list: value.toString() });
           }}
         >
-          <Picker.Item label="Kies lijst" value="java" />
+          {possibleLists.map((list, index) => (
+            <Picker.Item key={index} label={list.label} value={list.value} />
+          ))}
         </Picker>
         <View style={picker.divider} />
       </View>
