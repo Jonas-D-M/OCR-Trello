@@ -22,9 +22,10 @@ import { useNavigation } from "@react-navigation/core";
 import Pagination from "../../Components/Pagination";
 import { FlatList, ScrollView } from "react-native-gesture-handler";
 import { theme } from "../../Styles/colors";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import AxiosInstance from "../../Utils/axios";
 import { IList } from "../../Types/lists";
+import { addTitles, setListId } from "../../Redux/Actions";
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get("window");
 
@@ -37,12 +38,11 @@ const Header: FunctionComponent = () => {
       value: "",
     },
   ]);
+  const dispatch = useDispatch();
 
   const [possibleLists, setPossibleLists] = useState([
     { label: "Kies lijst", value: "" },
   ]);
-  const [disabledStyle, setDisabledStyle] = useState<any>(picker.itemDisabled);
-
   // @ts-ignore
   const { boards } = useSelector((state) => state.boards);
 
@@ -106,6 +106,7 @@ const Header: FunctionComponent = () => {
           enabled={enabled}
           selectedValue={selectedValue.list}
           onValueChange={(value) => {
+            dispatch(setListId(value.toString()));
             setSelectedValue({ ...selectedValue, list: value.toString() });
           }}
         >
@@ -121,11 +122,21 @@ const Header: FunctionComponent = () => {
 
 const NewCards = ({ route }: any) => {
   const params = route.params;
-
+  const [enabled, setEnabled] = useState(false);
+  const dispatch = useDispatch();
   const [index, setIndex] = useState(0);
   const [endReached, setEndReached] = useState(false);
   const indexRef = useRef(index);
   indexRef.current = index;
+
+  //@ts-ignore
+  const { newCards } = useSelector((state) => state);
+
+  useEffect(() => {
+    if (newCards.boardId) {
+      setEnabled(true);
+    }
+  }, [newCards.boardId]);
 
   const titles = [
     "ask for feedback",
@@ -133,6 +144,10 @@ const NewCards = ({ route }: any) => {
     "Add cards",
     "show to martijn",
   ];
+
+  useEffect(() => {
+    dispatch(addTitles(titles));
+  }, []);
 
   useEffect(() => {
     if (index + 1 === titles.length) {
