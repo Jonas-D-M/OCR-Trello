@@ -7,6 +7,8 @@ import {
   Modal,
   useWindowDimensions,
 } from "react-native";
+import { useDispatch } from "react-redux";
+import { toggleLoading } from "../../Redux/Actions";
 
 import { cta } from "../../Styles/components";
 import googleVision from "../../Utils/googleVision";
@@ -24,13 +26,16 @@ const MenuItems: FunctionComponent = () => {
 
 const CTA = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const takePicture = async () => {
-    // const string: string = await googleVision.createCardsFromPicture();
-    // const tempString = string.split("* ").join("");
-    // const titles = tempString.split(/\r?\n/).pop();
-    // navigation.navigate("NewCards", { titles });
-    navigation.navigate("NewCards");
+    dispatch(toggleLoading());
+    const string: string = await googleVision.createCardsFromPicture();
+    const tempString = string.split("* ").join("");
+    const titles = tempString.split(/\r?\n/);
+    titles.pop();
+    dispatch(toggleLoading());
+    navigation.navigate("NewCards", { titles });
   };
 
   return (

@@ -25,7 +25,9 @@ import { theme } from "../../Styles/colors";
 import { useDispatch, useSelector } from "react-redux";
 import AxiosInstance from "../../Utils/axios";
 import { IList } from "../../Types/lists";
-import { addTitles, setListId } from "../../Redux/Actions";
+import { addTitles, setListId, toggleLoading } from "../../Redux/Actions";
+import endpoints from "../../Utils/endpoints";
+import axios from "axios";
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get("window");
 
@@ -121,33 +123,25 @@ const Header: FunctionComponent = () => {
 };
 
 const NewCards = ({ route }: any) => {
-  const params = route.params;
+  const titles = route.params.titles;
   const [enabled, setEnabled] = useState(false);
+  const navigation = useNavigation();
   const dispatch = useDispatch();
   const [index, setIndex] = useState(0);
   const [endReached, setEndReached] = useState(false);
   const indexRef = useRef(index);
   indexRef.current = index;
-
   //@ts-ignore
   const { newCards } = useSelector((state) => state);
 
   useEffect(() => {
-    if (newCards.boardId) {
-      setEnabled(true);
-    }
-  }, [newCards.boardId]);
-
-  const titles = [
-    "ask for feedback",
-    "test app",
-    "Add cards",
-    "show to martijn",
-  ];
+    console.log(titles);
+  }, []);
 
   useEffect(() => {
     dispatch(addTitles(titles));
-  }, []);
+    console.log(titles);
+  }, [titles]);
 
   useEffect(() => {
     if (index + 1 === titles.length) {
@@ -193,6 +187,36 @@ const NewCards = ({ route }: any) => {
     }
   }, []);
 
+  const uploadCards = async () => {
+    const lId = newCards.listId;
+    if (lId) {
+      dispatch(toggleLoading());
+      const requests = newCards.cards.map((card) => {
+        const params = {
+          name: card.title,
+          desc: card.desc,
+          idList: card.listId,
+        };
+        return AxiosInstance.post(
+          endpoints.postCards,
+          {},
+          {
+            params,
+          }
+        );
+      });
+      await axios
+        .all(requests)
+        .then(() => {
+          dispatch(toggleLoading());
+          navigation.navigate("Home");
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }
+  };
+
   return (
     // <SafeAreaView style={container.main}>
     <ScrollView contentContainerStyle={container.main}>
@@ -213,7 +237,9 @@ const NewCards = ({ route }: any) => {
         />
       </KeyboardAvoidingView>
       <Pagination length={titles.length} activePage={index} />
-      {endReached && <Button title={"kaarten toevoegen"} onPress={() => {}} />}
+      {endReached && (
+        <Button title={"kaarten toevoegen"} onPress={uploadCards} />
+      )}
     </ScrollView>
     // </SafeAreaView>
   );

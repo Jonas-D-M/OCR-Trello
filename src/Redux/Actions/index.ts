@@ -5,7 +5,7 @@ import {
   DELETE_STORED_CARDS,
   SET_LIST_ID,
 } from "../Reducers/newCard";
-import { LOG_IN, LOG_OUT } from "../Reducers/user";
+import { LOG_IN, LOG_OUT, TOGGLE_LOADING } from "../Reducers/user";
 
 export const logIn = (token: string) => {
   return { type: LOG_IN, payload: token };
@@ -33,4 +33,8 @@ export const addTitles = (titles: Array<string>) => {
 
 export const deleteStoredCars = () => {
   return { type: DELETE_STORED_CARDS };
+};
+
+export const toggleLoading = () => {
+  return { type: TOGGLE_LOADING };
 };

@@ -256,3 +256,12 @@ export const header = StyleSheet.create({
     marginLeft: 16,
   },
 });
+
+export const loadingScreen = StyleSheet.create({
+  main: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "white",
+  },
+});
