@@ -4,6 +4,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { list } from "../../Styles/components";
 import { IList } from "../../Types/lists";
 import AxiosInstance from "../../Utils/axios";
+import trello from "../../Utils/trello";
 import Card from "../Card";
 
 interface ListProps {
@@ -15,13 +16,10 @@ const List: FunctionComponent<ListProps> = ({ object }) => {
 
   useEffect(() => {
     const getCards = async () => {
-      AxiosInstance.get(`/lists/${object.id}/cards`, { params: {} })
-        .then(({ data }) => {
-          setCards(data);
-        })
-        .catch((e) => {
-          console.error(e);
-        });
+      const cards = await trello.cards(object.id);
+      if (cards) {
+        setCards(cards);
+      }
     };
     getCards();
   }, []);

@@ -1,19 +1,12 @@
 import { useNavigation } from "@react-navigation/core";
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  FlatList,
-  StyleSheet,
-  ImageBackground,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { FlatList, ImageBackground } from "react-native";
 
 import List from "../../Components/List";
-import { board, list } from "../../Styles/components";
+import { board } from "../../Styles/components";
 import { IBoard } from "../../Types/boards";
 import { IList } from "../../Types/lists";
-import AxiosInstance from "../../Utils/axios";
+import trello from "../../Utils/trello";
 
 const Board = ({ route }: any) => {
   const boardObject: IBoard = route.params.object;
@@ -29,19 +22,14 @@ const Board = ({ route }: any) => {
   const [lists, setLists] = useState<Array<IList>>([]);
 
   useEffect(() => {
-    const getListsOnBoard = async () => {
-      AxiosInstance.get<Array<IList>>(`/boards/${boardObject.id}/lists`, {
-        params: {},
-      })
-        .then(({ data }) => {
-          setLists(data);
-        })
-        .catch((e) => {
-          console.error(e);
-        });
+    const getLists = async () => {
+      const lists = await trello.lists(boardObject.id);
+      if (lists) {
+        setLists(lists);
+      }
     };
     if (boardObject) {
-      getListsOnBoard();
+      getLists();
     }
   }, [boardObject]);
 

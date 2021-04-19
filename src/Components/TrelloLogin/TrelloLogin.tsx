@@ -3,6 +3,7 @@ import { Modal, useWindowDimensions } from "react-native";
 import { WebView } from "react-native-webview";
 import { useDispatch } from "react-redux";
 import { logIn } from "../../Redux/Actions";
+import trello from "../../Utils/trello";
 
 interface ITrelloLogin {
   data: string | null;
@@ -25,13 +26,18 @@ function TrelloLogin({ data, show }: ITrelloLogin) {
       const run = `const token = document.querySelector('pre').innerHTML; window.ReactNativeWebView.postMessage(token); true;`;
       setTimeout(() => {
         webviewRef.current?.injectJavaScript(run);
-      }, 1000);
+      }, 500);
     }
   }, [webviewRef, currentUrl]);
 
   useEffect(() => {
+    const fetchUser = async (token: string) => {
+      const user = await trello.me(token);
+      user.token = token;
+      dispatch(logIn(user));
+    };
     if (token) {
-      dispatch(logIn(token));
+      fetchUser(token);
     }
   }, [token]);
 

@@ -1,3 +1,4 @@
+import IUser from "../../Types/user";
 import { STORE_BOARDS } from "../Reducers/boards";
 import {
   ADD_CARD_DESCRIPTION,
@@ -7,8 +8,8 @@ import {
 } from "../Reducers/newCard";
 import { LOG_IN, LOG_OUT, TOGGLE_LOADING } from "../Reducers/user";
 
-export const logIn = (token: string) => {
-  return { type: LOG_IN, payload: token };
+export const logIn = (user: IUser) => {
+  return { type: LOG_IN, payload: user };
 };
 
 export const logOut = () => {
