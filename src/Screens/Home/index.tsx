@@ -70,6 +70,7 @@ const Home = () => {
   const [refreshing, setRefreshing] = useState(false);
 
   const dispatch = useDispatch();
+
   const fetchboards = async () => {
     setRefreshing(true);
     const boards = await trello.boards();

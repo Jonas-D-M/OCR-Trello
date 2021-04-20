@@ -282,3 +282,46 @@ export const loadingScreen = StyleSheet.create({
     backgroundColor: "white",
   },
 });
+
+export const notificationItem = StyleSheet.create({
+  main: {
+    flexDirection: "row",
+    backgroundColor: neutral[200],
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    alignItems: "center",
+  },
+  avatar: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    marginRight: 16,
+  },
+  textContainer: {
+    width: Dimensions.get("screen").width - (16 + 32 + 16),
+  },
+  highLight: {
+    fontWeight: "bold",
+  },
+  commentContainer: {
+    backgroundColor: "white",
+    paddingVertical: 8,
+    paddingHorizontal: 8,
+    marginRight: 16,
+  },
+  comment: {
+    backgroundColor: "white",
+  },
+  dueSoonContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+});
+
+export const separator = StyleSheet.create({
+  main: {
+    height: 1,
+    width: "100%",
+    backgroundColor: neutral["300"],
+  },
+});

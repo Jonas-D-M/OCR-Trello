@@ -10,6 +10,8 @@ import colors from "../../Utils/colors";
 import { theme } from "../../Styles/colors";
 import trello from "../../Utils/trello";
 import { useSelector } from "react-redux";
+import { INotification } from "../../Types/notifications";
+import { not } from "react-native-reanimated";
 
 interface HeaderProps {
   navigation: any;
@@ -28,12 +30,16 @@ const Header: FunctionComponent<HeaderProps> = ({
   };
   const [hasNotifications, setHasNotifications] = useState(false);
   const [onHomePage, setOnHomePage] = useState(true);
+  const [notifications, setNotifications] = useState<Array<INotification>>([]);
   //@ts-ignore
   const { user } = useSelector((state) => state);
 
   const fetchNotifications = async () => {
-    const not = await trello.notifications(user.user.id);
+    const not = (await trello.notifications(
+      user.user.id
+    )) as Array<INotification>;
     if (not) {
+      setNotifications(not);
     }
   };
 
@@ -55,7 +61,7 @@ const Header: FunctionComponent<HeaderProps> = ({
             ? header.youHaveNotifications
             : header.noNotifications,
         ]}
-        onPress={() => navigation.navigate("Notifications")}
+        onPress={() => navigation.navigate("Notifications", notifications)}
       >
         <Ionicons
           name="ios-notifications-outline"
