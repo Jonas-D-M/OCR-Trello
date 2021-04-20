@@ -10,12 +10,6 @@ const Loading = () => {
   return (
     <View style={loadingScreen.main}>
       <ActivityIndicator size="large" color={theme["blue-100"]} />
-      <Button
-        onPress={() => {
-          dispatch(toggleLoading());
-        }}
-        title={"clear state"}
-      />
     </View>
   );
 };

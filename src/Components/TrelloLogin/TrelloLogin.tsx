@@ -26,7 +26,7 @@ function TrelloLogin({ data, show }: ITrelloLogin) {
       const run = `const token = document.querySelector('pre').innerHTML; window.ReactNativeWebView.postMessage(token); true;`;
       setTimeout(() => {
         webviewRef.current?.injectJavaScript(run);
-      }, 500);
+      }, 1000);
     }
   }, [webviewRef, currentUrl]);
 

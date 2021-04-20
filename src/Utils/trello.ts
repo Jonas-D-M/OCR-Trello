@@ -28,14 +28,14 @@ export default (function () {
 
   const me = async (token: string) => {
     return await axios
-      .get("/members/me", {
+      .get("https://trello.com/1/members/me", {
         params: {
           key: Environment["TRELLO_API_KEY"],
-          token,
+          token: token,
         },
       })
       .then(({ data }) => data)
-      .catch(() => null);
+      .catch((e) => null);
   };
 
   const boards = async (params?: any) => {
@@ -111,6 +111,33 @@ export default (function () {
       .catch(() => null);
   };
 
-  const notifications = async () => {};
-  return { auth, me, boards, groupBoards, groupedBoards, lists, cards };
+  const notifications = async (memberId: string) => {
+    return await AxiosInstance.get(`/members/${memberId}/notifications`, {
+      params: {},
+    })
+      .then(({ data }) => data)
+      .catch(() => null);
+  };
+
+  const dueDates = async () => {
+    return await AxiosInstance.get("/search", {
+      params: {
+        due: "incomplete",
+      },
+    })
+      .then(({ data }) => data)
+      .catch(() => null);
+  };
+
+  return {
+    auth,
+    me,
+    boards,
+    groupBoards,
+    groupedBoards,
+    lists,
+    cards,
+    notifications,
+    dueDates,
+  };
 })();

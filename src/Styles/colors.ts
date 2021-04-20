@@ -11,7 +11,8 @@ export const neutral = {
 };
 
 export const theme = {
-  red: "#E74570",
+  "red-100": "#EB5A46",
+  "red-200": "#E74570",
   yellow: "#FFC400",
   green: "#70b500",
   "blue-100": "#2CA7EF",

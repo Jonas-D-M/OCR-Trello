@@ -232,13 +232,18 @@ export const carousel = StyleSheet.create({
 export const header = StyleSheet.create({
   container: {
     height: 72,
-    // marginBottom: -24,
+    backgroundColor: theme["blue-100"],
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  containerOnBoard: {
+    height: 72,
     backgroundColor: theme["blue-100"],
     width: "100%",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-start",
-    // opacity: 0.2,
   },
   titleContainer: {
     marginTop: Platform.OS === "ios" ? 0 : StatusBar.currentHeight,
@@ -254,6 +259,18 @@ export const header = StyleSheet.create({
   icon: {
     color: "white",
     marginLeft: 16,
+  },
+  bell: {
+    color: "white",
+  },
+  youHaveNotifications: {
+    backgroundColor: theme["red-100"],
+    padding: 4,
+    borderRadius: 3,
+    marginRight: 16,
+  },
+  noNotifications: {
+    marginRight: 16,
   },
 });
 

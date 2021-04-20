@@ -1,10 +1,10 @@
 import { useNavigation } from "@react-navigation/core";
 import React, { FunctionComponent, useEffect, useState } from "react";
-import { View, Text, SectionList, Image } from "react-native";
+import { View, Text, SectionList, Image, Button } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useDispatch } from "react-redux";
 import CTA from "../../Components/CTA";
-import { addBoards } from "../../Redux/Actions";
+import { addBoards, logOut } from "../../Redux/Actions";
 import { sections } from "../../Styles/components";
 import { IBoard } from "../../Types/boards";
 import trello from "../../Utils/trello";
@@ -67,16 +67,20 @@ const Item: FunctionComponent<ItemProps> = ({ object }) => {
 
 const Home = () => {
   const [data, setData] = useState<any>();
+  const [refreshing, setRefreshing] = useState(false);
+
   const dispatch = useDispatch();
+  const fetchboards = async () => {
+    setRefreshing(true);
+    const boards = await trello.boards();
+    if (boards) {
+      dispatch(addBoards(boards));
+      setData(trello.groupBoards(boards));
+    }
+    setRefreshing(false);
+  };
 
   useEffect(() => {
-    const fetchboards = async () => {
-      const boards = await trello.boards();
-      if (boards) {
-        dispatch(addBoards(boards));
-        setData(trello.groupBoards(boards));
-      }
-    };
     fetchboards();
   }, []);
 
@@ -90,8 +94,16 @@ const Home = () => {
         renderSectionHeader={({ section: { title } }) => (
           <Text style={sections.sectionHeader}>{title}</Text>
         )}
+        refreshing={refreshing}
+        onRefresh={fetchboards}
       />
       <CTA />
+      <Button
+        title="clear state"
+        onPress={() => {
+          dispatch(logOut());
+        }}
+      />
     </>
   );
 };

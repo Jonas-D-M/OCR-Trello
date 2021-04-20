@@ -10,6 +10,7 @@ import NewCards from "../Screens/NewCards";
 import Header from "../Components/Header";
 import { useSelector } from "react-redux";
 import Loading from "../Screens/Loading";
+import NotificationOverview from "../Screens/NotificationOverview";
 
 const Stack = createStackNavigator();
 
@@ -69,6 +70,23 @@ const ApplicationNavigator = () => {
                   );
                 },
                 title: "Kaarten toevoegen",
+              }}
+            />
+            <Stack.Screen
+              name="Notifications"
+              component={NotificationOverview}
+              options={{
+                header: ({ scene, navigation }: any) => {
+                  const { options } = scene.descriptor;
+                  return (
+                    <Header
+                      navigation={navigation}
+                      options={options}
+                      backButton={true}
+                    />
+                  );
+                },
+                title: "Meldingen",
               }}
             />
           </Stack.Navigator>
