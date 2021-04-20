@@ -6,7 +6,8 @@ import {
   DELETE_STORED_CARDS,
   SET_LIST_ID,
 } from "../Reducers/newCard";
-import { LOG_IN, LOG_OUT, TOGGLE_LOADING } from "../Reducers/user";
+import { TOGGLE_LOADING } from "../Reducers/ui";
+import { LOG_IN, LOG_OUT } from "../Reducers/user";
 
 export const logIn = (user: IUser) => {
   return { type: LOG_IN, payload: user };

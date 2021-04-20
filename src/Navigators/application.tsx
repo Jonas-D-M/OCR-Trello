@@ -15,11 +15,11 @@ const Stack = createStackNavigator();
 
 const ApplicationNavigator = () => {
   //@ts-ignore
-  const { user } = useSelector((state) => state);
+  const { ui } = useSelector((state) => state);
   return (
     <SafeAreaProvider>
       <NavigationContainer>
-        {!user.loading ? (
+        {!ui.loading ? (
           <Stack.Navigator>
             <Stack.Screen
               name="Home"
