@@ -1,6 +1,7 @@
-import { Constants, Notifications } from "expo";
+import { Constants } from "expo";
 import { Platform } from "react-native";
 import * as Permissions from "expo-permissions";
+import * as Notifications from "expo-notifications";
 import ILocalNotification from "../Types/localNotification";
 
 export default (function () {
@@ -37,32 +38,23 @@ export default (function () {
     return token;
   };
   const scheduleLocalNotification = async (
-    due: string,
+    due: Date,
     dueReminder: number,
     name: string,
-    cardId: string
+    cardId: string,
+    completed: boolean
   ) => {
     const dateObj = new Date(due);
-    console.log(`Creating notification for: ${dateObj}`);
-    const localNot: ILocalNotification = {
-      title: name,
-      body: `⏰ ${name} moet binnekort klaar zijn!`,
-    };
-    const schedOptions = {
-      time: dateObj.setMinutes(dateObj.getMinutes() - dueReminder),
-    };
-    return await Notifications.scheduleLocalNotificationAsync(
-      localNot,
-      schedOptions
-    )
-      .then((id: number) => {
-        return { id, cardId, name };
-      })
-      .catch(() => {
-        return { id: "failed", cardId, name };
-      });
+    return await Notifications.scheduleNotificationAsync({
+      content: {
+        title: `⏰ ${name} moet binnekort klaar zijn!`,
+      },
+      trigger: {
+        seconds: dateObj.setMinutes(dateObj.getMinutes() - dueReminder),
+      },
+    });
   };
-  const cancelNotification = async (notId: number) => {
+  const cancelNotification = async (notId: string) => {
     await Notifications.cancelScheduledNotificationAsync(notId);
   };
   return { registerAsync, scheduleLocalNotification, cancelNotification };

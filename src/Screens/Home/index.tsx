@@ -1,7 +1,15 @@
 import { useNavigation } from "@react-navigation/core";
 import axios from "axios";
-import React, { FunctionComponent, useEffect, useState } from "react";
-import { View, Text, SectionList, Image, Button } from "react-native";
+import React, { FunctionComponent, useEffect, useRef, useState } from "react";
+import {
+  View,
+  Text,
+  SectionList,
+  Image,
+  Button,
+  AppState,
+  AppStateStatus,
+} from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useDispatch, useSelector } from "react-redux";
 import CTA from "../../Components/CTA";
@@ -9,6 +17,8 @@ import Environment from "../../config/environment";
 import { addBoards, logOut } from "../../Redux/Actions";
 import { sections } from "../../Styles/components";
 import { IBoard } from "../../Types/boards";
+import { IQueryResult } from "../../Types/trelloQuery";
+import notifications from "../../Utils/notifications";
 import trello from "../../Utils/trello";
 
 interface ItemProps {
@@ -71,6 +81,9 @@ const Home = () => {
   const [data, setData] = useState<any>();
   const [refreshing, setRefreshing] = useState(false);
 
+  const appState = useRef(AppState.currentState);
+  const [appStateVisible, setAppStateVisible] = useState(appState.current);
+
   const dispatch = useDispatch();
 
   //@ts-ignore
@@ -84,6 +97,73 @@ const Home = () => {
       setData(trello.groupBoards(boards));
     }
     setRefreshing(false);
+  };
+
+  useEffect(() => {
+    AppState.addEventListener("change", _handleAppStateChange);
+
+    return () => {
+      AppState.removeEventListener("change", _handleAppStateChange);
+    };
+  }, []);
+
+  const _handleAppStateChange = async (nextAppState: AppStateStatus) => {
+    if (
+      appState.current.match(/inactive|background/) &&
+      nextAppState === "active"
+    ) {
+      // create notifications here!
+      const { cards } = (await trello.dueDates()) as IQueryResult;
+      const uncompletedDueCards = cards
+        .filter(({ due, dueComplete }) => {
+          // add check to see if
+          if (due && new Date(due) >= new Date()) {
+            return due;
+          }
+        })
+        .map(({ due, dueReminder, name, id, dueComplete }) => ({
+          due,
+          dueReminder,
+          name,
+          id,
+          dueComplete,
+        }));
+
+      const test = await Promise.all(
+        uncompletedDueCards.map(
+          async ({ due, dueReminder, name, id, dueComplete }) => {
+            return await notifications
+              .scheduleLocalNotification(
+                due,
+                dueReminder,
+                name,
+                id,
+                dueComplete
+              )
+              .then((id) => id)
+              .catch((e) => e);
+          }
+        )
+      );
+
+      // const testItem = uncompletedDueCards[0];
+      // const not = await notifications
+      //   .scheduleLocalNotification(
+      //     testItem.due,
+      //     testItem.dueReminder,
+      //     testItem.name,
+      //     testItem.id,
+      //     testItem.dueComplete
+      //   )
+      //   .then((id) => id)
+      //   .catch((e) => e);
+      console.log("====================================");
+      console.log(test);
+      console.log("====================================");
+    }
+
+    appState.current = nextAppState;
+    setAppStateVisible(appState.current);
   };
 
   useEffect(() => {

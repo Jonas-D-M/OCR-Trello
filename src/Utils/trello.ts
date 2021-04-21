@@ -122,11 +122,30 @@ export default (function () {
   const dueDates = async () => {
     return await AxiosInstance.get("/search", {
       params: {
-        due: "incomplete",
+        query: "due",
       },
     })
       .then(({ data }) => data)
       .catch(() => null);
+  };
+
+  const uploadCards = async (cards: Array<any>, listId: string) => {
+    const requests = cards.map((card) => {
+      const params = {
+        name: card.title,
+        desc: card.desc,
+        idList: listId,
+      };
+      return AxiosInstance.post(
+        endpoints.postCards,
+        {},
+        {
+          params,
+        }
+      );
+    });
+
+    return await axios.all(requests);
   };
 
   return {
@@ -139,5 +158,6 @@ export default (function () {
     cards,
     notifications,
     dueDates,
+    uploadCards,
   };
 })();
