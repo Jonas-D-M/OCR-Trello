@@ -11,7 +11,7 @@ import axios from "axios";
 export default (function () {
   let googleResponse: string, image: string;
 
-  const sendImageToGoogle = async (image: any) => {
+  const sendImageToGoogle = async (image: string) => {
     console.log("sending image to google");
 
     let body = JSON.stringify({
@@ -40,6 +40,7 @@ export default (function () {
         }
       )
       .then(({ data }) => {
+        console.log("data");
         return data;
       })
       .catch((e) => {
@@ -101,23 +102,23 @@ export default (function () {
 
   const scanImage = async () => {
     console.log("scanning image");
-    // const tempUrl =
-    //   "https://firebasestorage.googleapis.com/v0/b/sad-project-4f5e7.appspot.com/o/171527385_809662072983091_1500622622613311676_n.jpg?alt=media&token=2f51e2b2-8fb5-4755-b180-901729caaa6c";
-    let pickerResult = await ImagePicker.launchCameraAsync({
-      allowsEditing: true,
-      aspect: [9, 16],
-    });
-    return await handleImagePicked(pickerResult)
-      .then((value) => value)
-      .catch((e) => null);
-    // return await sendImageToGoogle(tempUrl)
-    //   .then((value) => {
-    //     return value;
-    //   })
-    //   .catch((e) => {
-    //     console.error(e);
-    //     return null;
-    //   });
+    const tempUrl =
+      "https://firebasestorage.googleapis.com/v0/b/sad-project-4f5e7.appspot.com/o/171527385_809662072983091_1500622622613311676_n.jpg?alt=media&token=2f51e2b2-8fb5-4755-b180-901729caaa6c";
+    // let pickerResult = await ImagePicker.launchCameraAsync({
+    //   allowsEditing: true,
+    //   aspect: [9, 16],
+    // });
+    // return await handleImagePicked(pickerResult)
+    //   .then((value) => value)
+    //   .catch((e) => null);
+    return await sendImageToGoogle(tempUrl)
+      .then((value) => {
+        return value;
+      })
+      .catch((e) => {
+        console.error(e);
+        return null;
+      });
   };
 
   const copyToClipBoard = () => {
@@ -146,9 +147,17 @@ export default (function () {
   };
 
   const createCardsFromPicture = async () => {
-    const data = await scanImage();
-    const string = data.responses[0].textAnnotations[0].description;
-    return string;
+    return await scanImage()
+      .then((data) => {
+        const temptitles = data.responses[0].textAnnotations[0].description;
+        const tempString = temptitles.split("* ").join("");
+        const titles = tempString.split(/\r?\n/);
+        titles.pop();
+        return titles;
+      })
+      .catch(() => {
+        return null;
+      });
   };
 
   return {

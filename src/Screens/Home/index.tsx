@@ -1,9 +1,11 @@
 import { useNavigation } from "@react-navigation/core";
+import axios from "axios";
 import React, { FunctionComponent, useEffect, useState } from "react";
 import { View, Text, SectionList, Image, Button } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import CTA from "../../Components/CTA";
+import Environment from "../../config/environment";
 import { addBoards, logOut } from "../../Redux/Actions";
 import { sections } from "../../Styles/components";
 import { IBoard } from "../../Types/boards";
@@ -71,6 +73,9 @@ const Home = () => {
 
   const dispatch = useDispatch();
 
+  //@ts-ignore
+  const { user } = useSelector((state) => state);
+
   const fetchboards = async () => {
     setRefreshing(true);
     const boards = await trello.boards();
@@ -100,7 +105,7 @@ const Home = () => {
       />
       <CTA />
       <Button
-        title="clear state"
+        title="logout"
         onPress={() => {
           dispatch(logOut());
         }}

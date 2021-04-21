@@ -12,6 +12,7 @@ import { toggleLoading } from "../../Redux/Actions";
 
 import { cta } from "../../Styles/components";
 import googleVision from "../../Utils/googleVision";
+import trello from "../../Utils/trello";
 
 const MenuItems: FunctionComponent = () => {
   return (
@@ -30,10 +31,7 @@ const CTA = () => {
 
   const takePicture = async () => {
     dispatch(toggleLoading());
-    const string: string = await googleVision.createCardsFromPicture();
-    const tempString = string.split("* ").join("");
-    const titles = tempString.split(/\r?\n/);
-    titles.pop();
+    const titles = await googleVision.createCardsFromPicture();
     dispatch(toggleLoading());
     navigation.navigate("NewCards", { titles });
   };
