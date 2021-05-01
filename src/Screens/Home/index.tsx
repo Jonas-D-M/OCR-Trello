@@ -133,13 +133,13 @@ const Home = () => {
         onRefresh={fetchboards}
       />
       <CTA />
-      <Button
+      {/* <Button
         type={"light"}
         title="logout"
         onPress={() => {
           dispatch(logOut());
         }}
-      />
+      /> */}
     </>
   );
 };
