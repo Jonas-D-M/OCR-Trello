@@ -113,7 +113,6 @@ const Home = () => {
       nextAppState === "active"
     ) {
       await trello.createPushNotifications();
-      await notifications.testScheduledNotificaton();
     }
 
     appState.current = nextAppState;

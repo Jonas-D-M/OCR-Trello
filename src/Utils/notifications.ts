@@ -82,10 +82,7 @@ export default (function () {
   };
 
   return {
-    registerAsync,
     scheduleLocalNotification,
-    cancelNotification,
     cancelAllNotifications,
-    testScheduledNotificaton,
   };
 })();
