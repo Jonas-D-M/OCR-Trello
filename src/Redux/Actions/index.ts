@@ -6,7 +6,7 @@ import {
   DELETE_STORED_CARDS,
   SET_LIST_ID,
 } from "../Reducers/newCard";
-import { TOGGLE_LOADING } from "../Reducers/ui";
+import { TOGGLE_ERROR, TOGGLE_LOADING } from "../Reducers/ui";
 import { LOG_IN, LOG_OUT } from "../Reducers/user";
 
 export const logIn = (user: IUser) => {
@@ -39,4 +39,8 @@ export const deleteStoredCars = () => {
 
 export const toggleLoading = () => {
   return { type: TOGGLE_LOADING };
+};
+
+export const toggleError = () => {
+  return { type: TOGGLE_ERROR };
 };

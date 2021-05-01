@@ -363,3 +363,24 @@ export const separator = StyleSheet.create({
     backgroundColor: neutral["300"],
   },
 });
+
+export const error = StyleSheet.create({
+  container: {
+    borderColor: "#cc0000",
+    backgroundColor: "white",
+    borderWidth: 1,
+    height: 40,
+    marginHorizontal: 36,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 2,
+    position: "absolute",
+    bottom: 0,
+    padding: 8,
+    marginBottom: 16,
+    alignSelf: "center",
+  },
+  text: {
+    color: "#cc0000",
+  },
+});

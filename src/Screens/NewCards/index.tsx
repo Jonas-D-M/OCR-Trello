@@ -9,12 +9,10 @@ import React, {
 import {
   View,
   Text,
-  Button,
   Dimensions,
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import NewCardInput from "../../Components/NewCardInput";
 import { carousel, picker } from "../../Styles/components";
 import { container } from "../../Styles/generic";
@@ -26,9 +24,8 @@ import { useDispatch, useSelector } from "react-redux";
 import AxiosInstance from "../../Utils/axios";
 import { IList } from "../../Types/lists";
 import { addTitles, setListId, toggleLoading } from "../../Redux/Actions";
-import endpoints from "../../Utils/endpoints";
-import axios from "axios";
 import trello from "../../Utils/trello";
+import Button from "../../Components/Button";
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get("window");
 

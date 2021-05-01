@@ -16,6 +16,7 @@ import { addBoards, logOut } from "../../Redux/Actions";
 import { sections } from "../../Styles/components";
 import { IBoard } from "../../Types/boards";
 import trello from "../../Utils/trello";
+import Error from "../../Components/Error";
 
 interface ItemProps {
   object: IBoard;
@@ -83,7 +84,7 @@ const Home = () => {
   const dispatch = useDispatch();
 
   //@ts-ignore
-  const { user } = useSelector((state) => state);
+  const { user, ui } = useSelector((state) => state);
 
   const fetchboards = async () => {
     setRefreshing(true);
@@ -133,13 +134,7 @@ const Home = () => {
         onRefresh={fetchboards}
       />
       <CTA />
-      {/* <Button
-        type={"light"}
-        title="logout"
-        onPress={() => {
-          dispatch(logOut());
-        }}
-      /> */}
+      {ui.error && <Error />}
     </>
   );
 };

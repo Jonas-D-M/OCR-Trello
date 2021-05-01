@@ -7,8 +7,8 @@ import {
   Modal,
   useWindowDimensions,
 } from "react-native";
-import { useDispatch } from "react-redux";
-import { toggleLoading } from "../../Redux/Actions";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleError, toggleLoading } from "../../Redux/Actions";
 
 import { cta } from "../../Styles/components";
 import googleVision from "../../Utils/googleVision";
@@ -29,11 +29,23 @@ const CTA = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
+  //@ts-ignore
+  const { ui } = useSelector((state) => state);
+
   const takePicture = async () => {
     dispatch(toggleLoading());
     const titles = await googleVision.createCardsFromPicture();
     dispatch(toggleLoading());
-    navigation.navigate("NewCards", { titles });
+    if (titles.length > 0) {
+      navigation.navigate("NewCards", { titles });
+    } else {
+      dispatch(toggleError());
+      setTimeout(() => {
+        if (ui.error) {
+          dispatch(toggleError());
+        }
+      }, 5000);
+    }
   };
 
   return (
