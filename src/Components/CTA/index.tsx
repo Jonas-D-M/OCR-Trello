@@ -36,14 +36,12 @@ const CTA = () => {
     dispatch(toggleLoading());
     const titles = await googleVision.createCardsFromPicture();
     dispatch(toggleLoading());
-    if (titles.length > 0) {
+    if (titles && titles.length > 0) {
       navigation.navigate("NewCards", { titles });
     } else {
       dispatch(toggleError());
       setTimeout(() => {
-        if (ui.error) {
-          dispatch(toggleError());
-        }
+        dispatch(toggleError());
       }, 5000);
     }
   };
