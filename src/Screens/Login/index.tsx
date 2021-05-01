@@ -1,16 +1,22 @@
 import React, { useState } from "react";
-import { Button, View, Image } from "react-native";
+import { View, Image } from "react-native";
 import TrelloLogin from "../../Components/TrelloLogin";
 
 import trello from "../../Utils/trello";
 import { container } from "../../Styles/generic";
 import images from "../../Utils/images";
 import { imageStyle } from "../../Styles/components";
+import Button from "../../Components/Button";
 
 function Login() {
   const [state, setState] = useState({
     data: null,
   });
+
+  const loggingIn = async () => {
+    const data = await trello.auth();
+    setState({ ...state, data });
+  };
 
   return (
     <View style={[container.main, container.login]}>
@@ -20,15 +26,7 @@ function Login() {
         source={images.LOGO}
         style={imageStyle.logo}
       />
-      <Button
-        title="login to trello"
-        onPress={async () => {
-          console.log("pressed");
-
-          const data = await trello.auth();
-          setState({ ...state, data });
-        }}
-      />
+      <Button type={"light"} title="login to Trello" onPress={loggingIn} />
     </View>
   );
 }

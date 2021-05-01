@@ -1,24 +1,20 @@
 import { useNavigation } from "@react-navigation/core";
-import axios from "axios";
 import React, { FunctionComponent, useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
   SectionList,
   Image,
-  Button,
   AppState,
   AppStateStatus,
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useDispatch, useSelector } from "react-redux";
 import CTA from "../../Components/CTA";
-import Environment from "../../config/environment";
+import Button from "../../Components/Button";
 import { addBoards, logOut } from "../../Redux/Actions";
 import { sections } from "../../Styles/components";
 import { IBoard } from "../../Types/boards";
-import { IQueryResult } from "../../Types/trelloQuery";
-import notifications from "../../Utils/notifications";
 import trello from "../../Utils/trello";
 
 interface ItemProps {
@@ -138,6 +134,7 @@ const Home = () => {
       />
       <CTA />
       <Button
+        type={"light"}
         title="logout"
         onPress={() => {
           dispatch(logOut());

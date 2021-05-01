@@ -5,6 +5,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import Login from "../Screens/Login";
+import { StatusBar } from "expo-status-bar";
 
 const Stack = createStackNavigator();
 
@@ -16,6 +17,7 @@ const LoginNavigator = () => {
           <Stack.Screen name="Login" component={Login} />
         </Stack.Navigator>
       </NavigationContainer>
+      <StatusBar style={"light"} />
     </SafeAreaProvider>
   );
 };

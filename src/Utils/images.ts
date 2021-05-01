@@ -1,3 +1,3 @@
 export default {
-  LOGO: require("../assets/Logo.png"),
+  LOGO: require("../assets/trello-white.png"),
 };

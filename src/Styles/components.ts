@@ -3,8 +3,46 @@ import { theme, neutral } from "./colors";
 
 export const button = StyleSheet.create({
   default: {
-    backgroundColor: theme["blue-100"],
-    color: "#FFF",
+    backgroundColor: theme["blue-200"],
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+    elevation: 2,
+    alignItems: "center",
+    paddingVertical: 8,
+    paddingHorizontal: 24,
+    marginBottom: 8,
+    alignSelf: "center",
+    borderRadius: 2,
+  },
+  titleDefault: {
+    color: "white",
+    fontSize: 16,
+  },
+
+  light: {
+    backgroundColor: "white",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+    elevation: 2,
+    alignItems: "center",
+    paddingVertical: 8,
+    paddingHorizontal: 24,
+    marginBottom: 8,
+    alignSelf: "center",
+    borderRadius: 2,
+  },
+  titleLight: {
+    color: theme["blue-200"],
   },
 });
 
