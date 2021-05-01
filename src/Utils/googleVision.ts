@@ -22,6 +22,9 @@ export default (function () {
             source: {
               imageUri: image,
             },
+            image_context: {
+              languageHints: ["nl", "en"],
+            },
           },
         },
       ],
