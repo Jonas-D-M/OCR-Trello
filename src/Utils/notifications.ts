@@ -2,7 +2,6 @@ import { Constants } from "expo";
 import { Platform } from "react-native";
 import * as Permissions from "expo-permissions";
 import * as Notifications from "expo-notifications";
-import ILocalNotification from "../Types/localNotification";
 
 export default (function () {
   const registerAsync = async () => {
@@ -37,25 +36,56 @@ export default (function () {
     }
     return token;
   };
+
+  const getSecondsBetweenDates = (startDate: Date, endDate: Date) => {
+    return (endDate.getTime() - startDate.getTime()) / 1000;
+  };
+
   const scheduleLocalNotification = async (
-    due: Date,
+    due: string,
     dueReminder: number,
-    name: string,
-    cardId: string,
-    completed: boolean
+    name: string
   ) => {
-    const dateObj = new Date(due);
+    const dateObj = new Date(Date.parse(due));
+    console.log("Due date:\t\t", dateObj);
+    dateObj.setMinutes(dateObj.getMinutes() - dueReminder);
+    console.log("Create notification at:\t", dateObj);
+    const seconds = getSecondsBetweenDates(new Date(), dateObj);
+    console.log("seconds:\t\t", seconds);
+
     return await Notifications.scheduleNotificationAsync({
       content: {
         title: `⏰ ${name} moet binnekort klaar zijn!`,
       },
       trigger: {
-        seconds: dateObj.setMinutes(dateObj.getMinutes() - dueReminder),
+        seconds,
       },
     });
   };
   const cancelNotification = async (notId: string) => {
     await Notifications.cancelScheduledNotificationAsync(notId);
   };
-  return { registerAsync, scheduleLocalNotification, cancelNotification };
+  const cancelAllNotifications = async () => {
+    await Notifications.cancelAllScheduledNotificationsAsync();
+  };
+
+  const testScheduledNotificaton = async () => {
+    Notifications.scheduleNotificationAsync({
+      content: {
+        title: "Time's up!",
+        body: "Change sides!",
+      },
+      trigger: {
+        seconds: 30,
+      },
+    });
+  };
+
+  return {
+    registerAsync,
+    scheduleLocalNotification,
+    cancelNotification,
+    cancelAllNotifications,
+    testScheduledNotificaton,
+  };
 })();

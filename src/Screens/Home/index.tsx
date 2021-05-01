@@ -112,54 +112,8 @@ const Home = () => {
       appState.current.match(/inactive|background/) &&
       nextAppState === "active"
     ) {
-      // create notifications here!
-      const { cards } = (await trello.dueDates()) as IQueryResult;
-      const uncompletedDueCards = cards
-        .filter(({ due, dueComplete }) => {
-          // add check to see if
-          if (due && new Date(due) >= new Date()) {
-            return due;
-          }
-        })
-        .map(({ due, dueReminder, name, id, dueComplete }) => ({
-          due,
-          dueReminder,
-          name,
-          id,
-          dueComplete,
-        }));
-
-      const test = await Promise.all(
-        uncompletedDueCards.map(
-          async ({ due, dueReminder, name, id, dueComplete }) => {
-            return await notifications
-              .scheduleLocalNotification(
-                due,
-                dueReminder,
-                name,
-                id,
-                dueComplete
-              )
-              .then((id) => id)
-              .catch((e) => e);
-          }
-        )
-      );
-
-      // const testItem = uncompletedDueCards[0];
-      // const not = await notifications
-      //   .scheduleLocalNotification(
-      //     testItem.due,
-      //     testItem.dueReminder,
-      //     testItem.name,
-      //     testItem.id,
-      //     testItem.dueComplete
-      //   )
-      //   .then((id) => id)
-      //   .catch((e) => e);
-      console.log("====================================");
-      console.log(test);
-      console.log("====================================");
+      await trello.createPushNotifications();
+      await notifications.testScheduledNotificaton();
     }
 
     appState.current = nextAppState;

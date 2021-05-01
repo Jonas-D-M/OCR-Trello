@@ -1,10 +1,12 @@
 import axios, { AxiosRequestConfig } from "axios";
 import Environment from "../config/environment";
 import { IBoard } from "../Types/boards";
+import { ICard } from "../Types/cards";
 import { IList } from "../Types/lists";
 import IUser from "../Types/user";
 import AxiosInstance from "./axios";
 import endpoints from "./endpoints";
+import notifications from "./notifications";
 
 export default (function () {
   const auth = async () => {
@@ -111,7 +113,7 @@ export default (function () {
       .catch(() => null);
   };
 
-  const notifications = async (memberId: string) => {
+  const events = async (memberId: string) => {
     return await AxiosInstance.get(`/members/${memberId}/notifications`, {
       params: {},
     })
@@ -120,13 +122,57 @@ export default (function () {
   };
 
   const dueDates = async () => {
-    return await AxiosInstance.get("/search", {
-      params: {
-        query: "due",
-      },
-    })
-      .then(({ data }) => data)
+    // Get all user boards
+    let boardIds: Array<any> = [];
+    const cards: Array<any> = [];
+
+    await AxiosInstance.get("/members/me", { params: { fields: "idBoards" } })
+      .then(({ data }) => (boardIds = data.idBoards))
       .catch(() => null);
+
+    if (boardIds.length > 0) {
+      const params = {
+        params: { fields: "name,due,dueComplete,dueReminder" },
+      };
+
+      const requests = boardIds.map((id) => {
+        return AxiosInstance.get(`/boards/${id}/cards`, params);
+      });
+      await axios.all(requests).then(
+        axios.spread((...responses) => {
+          for (const i in responses) {
+            cards.push(
+              ...responses[i].data.filter((card) => {
+                if (card.due) {
+                  if (Date.parse(card.due) >= new Date().valueOf()) {
+                    return card;
+                  }
+                }
+              })
+            );
+          }
+        })
+      );
+      return cards;
+    } else {
+      return null;
+    }
+  };
+
+  const createPushNotifications = async () => {
+    const cards = await dueDates();
+    if (cards && cards.length > 0) {
+      await notifications.cancelAllNotifications();
+      const nots = await Promise.all(
+        cards.map(async ({ due, dueReminder, name }) => {
+          return await notifications
+            .scheduleLocalNotification(due, dueReminder, name)
+            .then((id) => id)
+            .catch((e) => e);
+        })
+      );
+      console.log("nots: ", nots);
+    }
   };
 
   const uploadCards = async (cards: Array<any>, listId: string) => {
@@ -156,8 +202,8 @@ export default (function () {
     groupedBoards,
     lists,
     cards,
-    notifications,
-    dueDates,
+    notifications: events,
+    createPushNotifications,
     uploadCards,
   };
 })();
