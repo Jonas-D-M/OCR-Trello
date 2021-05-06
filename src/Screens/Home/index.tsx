@@ -122,7 +122,7 @@ const Home = () => {
   }, []);
 
   return (
-    <View style={{ backgroundColor: neutral["200"] }}>
+    <View style={{ backgroundColor: neutral["200"], flex: 1 }}>
       <SectionList
         // ListHeaderComponent={<BoardsWithStar boards={data[1].data} />}
         sections={data}
