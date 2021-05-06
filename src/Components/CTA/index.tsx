@@ -8,7 +8,12 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleError, toggleLoading } from "../../Redux/Actions";
+import {
+  dissableError,
+  enableError,
+  toggleError,
+  toggleLoading,
+} from "../../Redux/Actions";
 
 import { cta } from "../../Styles/components";
 import googleVision from "../../Utils/googleVision";
@@ -29,21 +34,27 @@ const CTA = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
-  //@ts-ignore
-  const { ui } = useSelector((state) => state);
-
+  // todo: actualy display usefull errors
   const takePicture = async () => {
     dispatch(toggleLoading());
-    const titles = await googleVision.createCardsFromPicture();
-    dispatch(toggleLoading());
-    if (titles && titles.length > 0) {
-      navigation.navigate("NewCards", { titles });
-    } else {
-      dispatch(toggleError());
-      setTimeout(() => {
-        dispatch(toggleError());
-      }, 5000);
-    }
+    await googleVision
+      .createCardsFromPicture()
+      .then((titles) => {
+        if (titles && titles.length > 0) {
+          navigation.navigate("NewCards", { titles });
+        }
+      })
+      .catch((error) => {
+        if (error !== "Cancelled") {
+          dispatch(enableError());
+          setTimeout(() => {
+            dispatch(dissableError());
+          }, 5000);
+        }
+      })
+      .finally(() => {
+        dispatch(toggleLoading());
+      });
   };
 
   return (

@@ -1,15 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Text, TouchableOpacity } from "react-native";
-import { useDispatch } from "react-redux";
-import { toggleError } from "../../Redux/Actions";
+import { useDispatch, useSelector } from "react-redux";
+import { dissableError, toggleError } from "../../Redux/Actions";
 import { error } from "../../Styles/components";
 
 const Error = () => {
   const dispatch = useDispatch();
+  //@ts-ignore
+  const { ui } = useSelector((state) => state);
+
   const discardError = () => {
-    console.log("discard error");
-    dispatch(toggleError());
+    dispatch(dissableError());
   };
+
   return (
     <TouchableOpacity onPress={discardError} style={error.container}>
       <Text style={error.text}>Woops something went wrong 😕</Text>

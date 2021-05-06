@@ -6,7 +6,12 @@ import {
   DELETE_STORED_CARDS,
   SET_LIST_ID,
 } from "../Reducers/newCard";
-import { TOGGLE_ERROR, TOGGLE_LOADING } from "../Reducers/ui";
+import {
+  FALSE_ERROR,
+  TOGGLE_ERROR,
+  TOGGLE_LOADING,
+  TRUE_ERROR,
+} from "../Reducers/ui";
 import { LOG_IN, LOG_OUT } from "../Reducers/user";
 
 export const logIn = (user: IUser) => {
@@ -43,4 +48,12 @@ export const toggleLoading = () => {
 
 export const toggleError = () => {
   return { type: TOGGLE_ERROR };
+};
+
+export const dissableError = () => {
+  return { type: FALSE_ERROR };
+};
+
+export const enableError = () => {
+  return { type: TRUE_ERROR };
 };

@@ -17,6 +17,7 @@ import { sections } from "../../Styles/components";
 import { IBoard } from "../../Types/boards";
 import trello from "../../Utils/trello";
 import Error from "../../Components/Error";
+import { neutral, theme } from "../../Styles/colors";
 
 interface ItemProps {
   object: IBoard;
@@ -121,7 +122,7 @@ const Home = () => {
   }, []);
 
   return (
-    <>
+    <View style={{ backgroundColor: neutral["200"] }}>
       <SectionList
         // ListHeaderComponent={<BoardsWithStar boards={data[1].data} />}
         sections={data}
@@ -135,7 +136,7 @@ const Home = () => {
       />
       <CTA />
       {ui.error && <Error />}
-    </>
+    </View>
   );
 };
 

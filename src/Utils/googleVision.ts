@@ -111,6 +111,11 @@ export default (function () {
       allowsEditing: true,
       aspect: [9, 16],
     });
+
+    if (pickerResult.cancelled) {
+      throw "Cancelled";
+    }
+
     return await handleImagePicked(pickerResult)
       .then((value) => value)
       .catch((e) => null);
@@ -158,7 +163,10 @@ export default (function () {
         titles.pop();
         return titles;
       })
-      .catch(() => {
+      .catch((error) => {
+        if (error === "Cancelled") {
+          throw error;
+        }
         return null;
       });
   };
