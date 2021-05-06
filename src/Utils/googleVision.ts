@@ -43,7 +43,6 @@ export default (function () {
         }
       )
       .then(({ data }) => {
-        console.log("data");
         return data;
       })
       .catch((e) => {

@@ -1,5 +1,5 @@
-import { useNavigation } from '@react-navigation/core';
-import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
+import { useNavigation } from "@react-navigation/core";
+import React, { FunctionComponent, useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -7,17 +7,17 @@ import {
   Image,
   AppState,
   AppStateStatus,
-} from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useDispatch, useSelector } from 'react-redux';
-import CTA from '../../Components/CTA';
-import Button from '../../Components/Button';
-import { addBoards, logOut } from '../../Redux/Actions';
-import { sections } from '../../Styles/components';
-import { IBoard } from '../../Types/boards';
-import trello from '../../Utils/trello';
-import Error from '../../Components/Error';
-import { neutral, theme } from '../../Styles/colors';
+} from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { useDispatch, useSelector } from "react-redux";
+import CTA from "../../Components/CTA";
+import Button from "../../Components/Button";
+import { addBoards, logOut } from "../../Redux/Actions";
+import { sections } from "../../Styles/components";
+import { IBoard } from "../../Types/boards";
+import trello from "../../Utils/trello";
+import Error from "../../Components/Error";
+import { neutral, theme } from "../../Styles/colors";
 
 interface ItemProps {
   object: IBoard;
@@ -48,7 +48,7 @@ const Item: FunctionComponent<ItemProps> = ({ object }) => {
   const navigation = useNavigation();
 
   const handlePress = () => {
-    navigation.navigate('Board', {
+    navigation.navigate("Board", {
       title: object.name,
       object,
       color: object.prefs.backgroundColor,
@@ -88,9 +88,9 @@ const Home = () => {
   const { user, ui } = useSelector((state) => state);
 
   const fetchboards = async () => {
-    console.log('====================================');
-    console.log('fetching boards');
-    console.log('====================================');
+    console.log("====================================");
+    console.log("fetching boards");
+    console.log("====================================");
     setRefreshing(true);
     const boards = await trello.boards();
     console.log(boards);
@@ -103,17 +103,17 @@ const Home = () => {
   };
 
   useEffect(() => {
-    AppState.addEventListener('change', _handleAppStateChange);
+    AppState.addEventListener("change", _handleAppStateChange);
 
     return () => {
-      AppState.removeEventListener('change', _handleAppStateChange);
+      AppState.removeEventListener("change", _handleAppStateChange);
     };
   }, []);
 
   const _handleAppStateChange = async (nextAppState: AppStateStatus) => {
     if (
       appState.current.match(/inactive|background/) &&
-      nextAppState === 'active'
+      nextAppState === "active"
     ) {
       await trello.createPushNotifications();
     }
@@ -127,7 +127,7 @@ const Home = () => {
   }, []);
 
   return (
-    <View style={{ backgroundColor: neutral['200'] }}>
+    <View style={{ backgroundColor: neutral["200"], flex: 1 }}>
       <SectionList
         // ListHeaderComponent={<BoardsWithStar boards={data[1].data} />}
         sections={data}

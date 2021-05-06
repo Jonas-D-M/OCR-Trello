@@ -1,4 +1,4 @@
-import { useNavigation } from "@react-navigation/core";
+import { useNavigation } from "@react-navigation/native";
 import React, { FunctionComponent, useState } from "react";
 import {
   View,
@@ -7,17 +7,12 @@ import {
   Modal,
   useWindowDimensions,
 } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  dissableError,
-  enableError,
-  toggleError,
-  toggleLoading,
-} from "../../Redux/Actions";
 
+import { useDispatch, useSelector } from "react-redux";
+
+import { dissableError, enableError, toggleLoading } from "../../Redux/Actions";
 import { cta } from "../../Styles/components";
 import googleVision from "../../Utils/googleVision";
-import trello from "../../Utils/trello";
 
 const MenuItems: FunctionComponent = () => {
   return (
@@ -40,20 +35,24 @@ const CTA = () => {
     await googleVision
       .createCardsFromPicture()
       .then((titles) => {
+        dispatch(toggleLoading());
         if (titles && titles.length > 0) {
           navigation.navigate("NewCards", { titles });
-        }
-      })
-      .catch((error) => {
-        if (error !== "Cancelled") {
+        } else {
           dispatch(enableError());
           setTimeout(() => {
             dispatch(dissableError());
           }, 5000);
         }
       })
-      .finally(() => {
+      .catch((error) => {
         dispatch(toggleLoading());
+        if (error !== "Cancelled") {
+          dispatch(enableError());
+          setTimeout(() => {
+            dispatch(dissableError());
+          }, 5000);
+        }
       });
   };
 
