@@ -1,24 +1,24 @@
-import axios, { AxiosRequestConfig } from "axios";
-import Environment from "../config/environment";
-import { IBoard } from "../Types/boards";
-import { ICard } from "../Types/cards";
-import { IList } from "../Types/lists";
-import IUser from "../Types/user";
-import AxiosInstance from "./axios";
-import endpoints from "./endpoints";
-import notifications from "./notifications";
+import axios, { AxiosRequestConfig } from 'axios';
+import Environment from '../config/environment';
+import { IBoard } from '../Types/boards';
+import { ICard } from '../Types/cards';
+import { IList } from '../Types/lists';
+import IUser from '../Types/user';
+import AxiosInstance from './axios';
+import endpoints from './endpoints';
+import notifications from './notifications';
 
 export default (function () {
   const auth = async () => {
-    const AuthEndpoint = "https://trello.com/1/authorize";
+    const AuthEndpoint = 'https://trello.com/1/authorize';
 
     const config: AxiosRequestConfig = {
       params: {
-        scope: "read,write,account",
-        expiration: "never",
-        name: "SAD Project",
-        key: Environment["TRELLO_API_KEY"],
-        response_type: "token",
+        scope: 'read,write,account',
+        expiration: 'never',
+        name: 'SAD Project',
+        key: Environment['TRELLO_API_KEY'],
+        response_type: 'token',
       },
     };
 
@@ -30,9 +30,9 @@ export default (function () {
 
   const me = async (token: string) => {
     return await axios
-      .get("https://trello.com/1/members/me", {
+      .get('https://trello.com/1/members/me', {
         params: {
-          key: Environment["TRELLO_API_KEY"],
+          key: Environment['TRELLO_API_KEY'],
           token: token,
         },
       })
@@ -43,20 +43,39 @@ export default (function () {
   const boards = async (params?: any) => {
     const config = {
       params: {
-        fields: "id,name,desc,pinned,url,prefs,starred,membership",
+        fields: 'id,name,desc,pinned,url,prefs,starred,membership',
         organization: true,
         ...params,
       },
     };
+
     return await AxiosInstance.get<Array<IBoard>>(endpoints.boards, config)
       .then(({ data }) => data)
-      .catch(() => null);
+      .catch((error) => {
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        } else if (error.request) {
+          // The request was made but no response was received
+          // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+          // http.ClientRequest in node.js
+          console.log('error.request: ', error.request);
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.log('Error', error.message);
+        }
+        console.log('error.config: ', error.config);
+        return null;
+      });
   };
 
   const groupBoards = (boards: Array<IBoard>) => {
     const DATA = [
       {
-        title: "Persoonlijke borden",
+        title: 'Persoonlijke borden',
         data: [],
       },
     ];
@@ -126,13 +145,13 @@ export default (function () {
     let boardIds: Array<any> = [];
     const cards: Array<any> = [];
 
-    await AxiosInstance.get("/members/me", { params: { fields: "idBoards" } })
+    await AxiosInstance.get('/members/me', { params: { fields: 'idBoards' } })
       .then(({ data }) => (boardIds = data.idBoards))
       .catch(() => null);
 
     if (boardIds.length > 0) {
       const params = {
-        params: { fields: "name,due,dueComplete,dueReminder" },
+        params: { fields: 'name,due,dueComplete,dueReminder' },
       };
 
       const requests = boardIds.map((id) => {
@@ -171,7 +190,7 @@ export default (function () {
             .catch((e) => e);
         })
       );
-      console.log("nots: ", nots);
+      console.log('nots: ', nots);
     }
   };
 

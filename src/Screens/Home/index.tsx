@@ -88,8 +88,13 @@ const Home = () => {
   const { user, ui } = useSelector((state) => state);
 
   const fetchboards = async () => {
+    console.log("====================================");
+    console.log("fetching boards");
+    console.log("====================================");
     setRefreshing(true);
     const boards = await trello.boards();
+    console.log(boards);
+
     if (boards) {
       dispatch(addBoards(boards));
       setData(trello.groupBoards(boards));
